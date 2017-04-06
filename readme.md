@@ -1,4 +1,4 @@
-<p align="center">Publications Office</p>
+<h1 align="center">Publications Office</h1>
 
 ## About
 
