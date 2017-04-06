@@ -1,0 +1,20 @@
+h4 {
+	display: inline;
+}
+
+a.info {
+	color: #16a085;
+}
+
+a.info:hover { 
+	color: #e74c3c;
+	/*text-decoration: none;*/
+}
+
+.indent {
+	padding-left: 1em;
+}
+
+div.list-group-item:hover {
+    background-color: #f5f5f5;
+}

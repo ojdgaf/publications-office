@@ -1,0 +1,32 @@
+/** {
+	border: 1px solid black;
+}*/
+
+body {
+  padding-top: 70px;
+}
+
+h1 {
+  font-size: 50px;
+  background: -webkit-linear-gradient(#eee, #333);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+}
+
+h2, h3, h4 {
+	word-wrap: break-word;
+}
+
+a {
+	-webkit-transition: color .5s linear;
+	-moz-transition: color .5s linear;
+	-ms-transition: color .5s linear;
+	-o-transition: color .5s linear;
+	transition: color .5s linear;
+}
+ 
+a:hover { 
+	color: #e74c3c;
+	text-decoration: none;
+}
