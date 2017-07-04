@@ -11,8 +11,8 @@ class CreatePublicationsTable extends Migration
     public function up()
     {
         Schema::create('publications', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('heading', 150)->unique();
+            $table->increments('id');
+            $table->string('heading', 180)->unique();
             $table->text('abstract');
             $table->text('description');
             $table->enum('genre', Publication::getPublicationGenres());
@@ -26,7 +26,7 @@ class CreatePublicationsTable extends Migration
             $table->unsignedInteger('page_initial')->nullable();
             $table->unsignedInteger('page_final')->nullable();
 
-            $table->string('document_path', 100);
+            $table->string('document_path', 180);
             $table->timestamps();
         });
     }

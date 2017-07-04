@@ -9,11 +9,11 @@ class CreateDatabasesTable extends Migration
     public function up()
     {
         Schema::create('databases', function (Blueprint $table) {
-            $table->smallIncrements('id');
-            $table->string('name', 150)->unique();
+            $table->increments('id');
+            $table->string('name', 180)->unique();
             $table->text('description')->nullable();
-            $table->string('url')->unique()->nullable();
-            $table->string('access_mode', 200)->nullable();
+            $table->string('url', 180)->unique()->nullable();
+            $table->string('access_mode', 180)->nullable();
             $table->timestamps();
         });
     }

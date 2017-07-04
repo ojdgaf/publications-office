@@ -9,7 +9,7 @@ class AddIdColToPublicationsAuthors extends Migration
     public function up()
     {
         Schema::table('author_publication', function (Blueprint $table) {
-            $table->smallIncrements('id')->first();
+            $table->increments('id')->first();
         });
     }
 

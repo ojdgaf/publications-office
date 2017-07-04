@@ -9,7 +9,7 @@ class AddIdColToLiteratureDatabases extends Migration
     public function up()
     {
         Schema::table('database_literature', function (Blueprint $table) {
-            $table->smallIncrements('id')->first();
+            $table->increments('id')->first();
         });
     }
 
