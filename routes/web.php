@@ -14,14 +14,11 @@ Route::get('/profile', 'PageController@getProfile');
 //=============================================================================
 
 // -------------------------------------- AJAX ------------------------------->
-Route::get('/publications/form-author', 'PublicationController@addAuthorForm');
-Route::get('/publications/literature/{type}/{id?}', 
-	'PublicationController@addLiteratureForm');
-Route::get('/publications/form-journal/{id?}', 'PublicationController@addJournalForm');
-Route::get('/publications/form-pages/{id?}', 'PublicationController@addPagesForm');
+Route::get('/publications/ajax/author-form', 'PublicationController@addAuthorForm');
+Route::get('/publications/ajax/literature-titles/{type}/{publicationId?}', 'PublicationController@addLiteratureTitles');
+Route::get('/publications/ajax/literature-form/{literatureId}/{publicationId?}', 'PublicationController@addLiteratureForm');
 // -------------------------------------- RESOURCE --------------------------->
-Route::get('/publications/filter', 'PublicationController@filter')
-	->name('publications.filter');
+Route::get('/publications/filter', 'PublicationController@filter')->name('publications.filter');
 
 Route::resource('/publications', 'PublicationController');
 
@@ -44,7 +41,7 @@ Route::resource('/authors', 'AuthorController');
 // -------------------------------------- AJAX ------------------------------->
 Route::get('/literature/form-database/', 'LiteratureController@addDatabaseForm');
 Route::get('/literature/form-journal/{id?}', 'LiteratureController@addJournalForm');
-Route::get('/literature/form-book-proceedings/{id?}', 
+Route::get('/literature/form-book-proceedings/{id?}',
 	'LiteratureController@addBookOrProceedingsForm');
 // -------------------------------------- RESOURCE --------------------------->
 Route::resource('/literature', 'LiteratureController');

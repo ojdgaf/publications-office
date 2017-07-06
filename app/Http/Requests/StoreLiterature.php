@@ -56,11 +56,11 @@ class StoreLiterature extends FormRequest
 
             'size' =>               ['required_if:type,book,type,conference proceedings',
                                     'integer',
-                                    'between:1,1000', 
+                                    'between:1,3000', 
                                     ],
 
             'issue_year' =>         ['required_if:type,book,type,conference proceedings',
-                                    'integer', 
+                                    'integer',
                                     'between:1990,' . date('Y'),
                                     ],
 
@@ -90,7 +90,7 @@ class StoreLiterature extends FormRequest
 
         $ids = $this->request->get('id_database');
         $dates = $this->request->get('date_database');
-        
+
         // id_database[i] and date_database[i] are both NULL or filled
         if (!empty($ids)) {
             foreach ($ids as $key => $value) {
@@ -124,31 +124,31 @@ class StoreLiterature extends FormRequest
         $messages = [];
 
         $messages['title.unique'] = 'Such literature already exists in a database';
-        $messages['type.in'] = 'Type must be one of following values: ' . 
+        $messages['type.in'] = 'Type must be one of following values: ' .
             implode(", ", Literature::getLiteratureTypes());
-        $messages['periodicity.in'] = 'Periodicity must be one of following values: ' . 
+        $messages['periodicity.in'] = 'Periodicity must be one of following values: ' .
             '1, 2, 3, 4, 6, 12';
-        $messages['size.required_if'] = 'Size is required if type is ' . 
+        $messages['size.required_if'] = 'Size is required if type is ' .
             'either "Book" or "Conference roceedings"';
-        $messages['issue_year.required_if'] = 'Issue year is required if type is ' . 
+        $messages['issue_year.required_if'] = 'Issue year is required if type is ' .
             'either "Book" or "Conference roceedings"';
 
         for ($i = 0; $i < 5; $i ++) {
             // <======================= id ===============>
-            $messages['id_database.' . $i . '.required'] = 'Database #' . 
+            $messages['id_database.' . $i . '.required'] = 'Database #' .
                 ($i + 1) . ' name must be chosen';
 
-            $messages['id_database.' . $i . '.integer'] = 'Database #' . 
+            $messages['id_database.' . $i . '.integer'] = 'Database #' .
                 ($i + 1) . ' name is invalid value';
 
-            $messages['id_database.' . $i . '.distinct'] = 'Database #' . 
+            $messages['id_database.' . $i . '.distinct'] = 'Database #' .
                 ($i + 1) . ' name has one or more duplicates';
 
-            $messages['id_database.' . $i . '.between'] = 'Database #' . 
+            $messages['id_database.' . $i . '.between'] = 'Database #' .
                 ($i + 1) . ' must be present in a database';
 
             // <======================= date =============>
-            $messages['date_database.' . $i . '.required'] = 'Database #' . 
+            $messages['date_database.' . $i . '.required'] = 'Database #' .
                 ($i + 1) . ' adding date must be chosen';
         }
 

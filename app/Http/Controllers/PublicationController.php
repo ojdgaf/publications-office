@@ -27,7 +27,7 @@ class PublicationController extends Controller
     public function index()
     {
         $publications = Publication::orderBy('heading')->paginate(10);
-        
+
         return view('pages/publications/index')
             ->withPublications($publications);
     }
@@ -119,7 +119,7 @@ class PublicationController extends Controller
 
             // delete all previous related authors
             AuthorPublication::where('publication_id', $publication->id)->delete();
-            
+
             // add new authors
             $this->storeAuthors(
                 $publication->id,
@@ -131,7 +131,7 @@ class PublicationController extends Controller
         return redirect()->route('publications.show', $publication->id)
             ->with('success', 'Publication was successfully updated');
     }
-    
+
     public function destroy($id)
     {
         $publication = Publication::find($id);
@@ -163,7 +163,7 @@ class PublicationController extends Controller
             return redirect()->route('publications.index')
                 ->with('error', 'No matching publications found');
         }
-        
+
         return view('pages/publications/index')
             ->withPublications($publications);
     }
@@ -201,45 +201,26 @@ class PublicationController extends Controller
 
     private function storeFile($heading, $newFile)
     {
-        // sanitize the given publication name
-        $name = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
-
-        // find out extension
-        $extension = $newFile->extension();
-
-        // save new file and return the path
-        return $newFile->storeAs('publications', $name . '.' . $extension);
+        $newName = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
+        $newExtension = $newFile->extension();
+        return $newFile->storeAs('publications', $newName . '.' . $newExtension);
     }
 
     private function updateFile($heading, $newFile, $oldFilePath)
     {
-        // sanitize the given publication name
-        $name = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
+        $newName = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
 
-        // there's an update with new file
+        // update file
         if ($newFile) {
-            // find out extension
-            $extension = $newFile->extension();
-
-            //delete previous file
+            $newExtension = $newFile->extension();
             Storage::delete($oldFilePath);
-
-            // save new file and return the path
-            return $newFile->storeAs('publications', $name . '.' . $extension);
+            return $newFile->storeAs('publications', $newName . '.' . $newExtension);
         }
-
-        // there's an update without new file
+        // update filename if necessary
         else {
-            // find out extension 
-            $extension = (new Filesystem)->extension($oldFilePath);
-            
-            // create full file name
-            $newFilePath = 'publications/' . $name . '.' . $extension;
-
-            // rename existing file
-            Storage::move($oldFilePath, $newFilePath);
-
-            // return the result
+            $oldExtension = (new Filesystem)->extension($oldFilePath);
+            $newFilePath = 'publications/' . $newName . '.' . $oldExtension;
+            if ($newFilePath != $oldFilePath) Storage::move($oldFilePath, $newFilePath);
             return $newFilePath;
         }
     }
@@ -255,7 +236,7 @@ class PublicationController extends Controller
             ->withStatuses(Author::getAuthorStatuses());
     }
 
-    public function addLiteratureForm($type, $id = null)
+    public function addLiteratureTitles($type, $publicationId = null)
     {
         $literature = null;
         $type = str_replace('_', ' ', $type);
@@ -266,49 +247,39 @@ class PublicationController extends Controller
         }
 
         // publication id is given - mark related literature
-        if ($id) {
-            $literatureActive = Publication::find($id)->literature;
+        if ($publicationId) {
+            $literatureActive = Publication::find($publicationId)->literature;
 
             if ($literatureActive->type == $type) {
-                return view('pages/publications/create-update parts/_form-literature')
+                return view('pages/publications/create-update parts/_form-literature-titles')
                     ->with('literatureActive', $literatureActive)
                     ->withLiterature($literature);
             }
         }
 
-        return view('pages/publications/create-update parts/_form-literature')
-            ->withLiterature($literature);       
+        return view('pages/publications/create-update parts/_form-literature-titles')
+            ->withLiterature($literature);
     }
 
-    public function addJournalForm($id = null)
+    public function addLiteratureForm($literatureId, $publicationId = null)
     {
-        // return view for edit
-        if ($id) {
-            $publication = Publication::find($id);
+        $literature = Literature::find($literatureId);
 
-            if ($publication) {
-                return view('pages/publications/create-update parts/_form-journal')
-                    ->withPublication($publication);
+        $viewPath = $literature->type == 'journal' ? 'journal' : 'book-or-proceedings';
+
+        // return view for edit
+        if ($publicationId) {
+            $publication = Publication::find($publicationId);
+
+            if ($publication->literature_id == $literatureId) {
+                return view('pages/publications/create-update parts/_form-' . $viewPath)
+                    ->withPublication($publication)
+                    ->withLiterature($literature);
             }
-        } 
+        }
 
         // return view for create
-        return view('pages/publications/create-update parts/_form-journal');
-    }
-
-    public function addPagesForm($id = null)
-    {
-        // return view for edit
-        if ($id) {
-            $publication = Publication::find($id);
-
-            if ($publication) {
-                return view('pages/publications/create-update parts/_form-pages')
-                    ->withPublication($publication);
-            }
-        } 
-        
-        // return view for create
-        return view('pages/publications/create-update parts/_form-pages'); 
+        return view('pages/publications/create-update parts/_form-' . $viewPath)
+            ->withLiterature($literature);
     }
 }

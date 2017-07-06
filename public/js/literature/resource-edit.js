@@ -1,20 +1,25 @@
-"use strict";
-
 $(function() {
-	var counter = $('#div-databases').children().length;
-	var limit = 5;
+    'use strict';
+
+    // if it is editing page, literature id will be submitted with every request
+    var literatureId = $('#id-literature').html();
 
 	var literatureSelect = $('select[name=type]');
 	var literatureDiv = $('#div-literature');
-	var literatureId = $('#id-literature').html();
-	var databaseButton = $('#btn-database');
+    var databasesDiv = $('#div-databases');
+    var databaseAppendButton = $('#btn-database-append');
+    var databaseDeleteButton = $('#btn-database-delete');
 
-	// load additional form immediately for EDIT purposes
-	loadLiteratureForm();
+    var counter = $('#div-databases').children().length;
+    var limit = 5;
+
+	// initialize ajax loading immediately for editing purpose
+	if (literatureId) loadLiteratureForm();
 
 	// add events handlers
  	literatureSelect.change(loadLiteratureForm);
- 	databaseButton.click(loadDatabaseForm);
+    databaseAppendButton.click(loadDatabaseForm);
+    databaseDeleteButton.click(deleteDatabaseForm);
 
 	// make AJAX request
 	function loadLiteratureForm() {
@@ -34,4 +39,11 @@ $(function() {
 			counter++;
 		}
 	}
+
+    function deleteDatabaseForm() {
+        if (counter > 1) {
+            databasesDiv.children().last().remove();
+            counter--;
+        }
+    }
 });

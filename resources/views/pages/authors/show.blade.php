@@ -5,7 +5,7 @@
 @endsection
 
 @section('css')
-	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}" 
+	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}"
 	type="text/css">
 @endsection
 
@@ -20,13 +20,12 @@
 			<hr>
 
 			@include(
-				'layouts/partials/_button-to-edit', 
+				'layouts/partials/_button-to-edit',
 				['model' => 'authors',
 				'id' => $author->id,
 			])
 
-			<label>Name</label>
-			<p>{{ ucwords($author->name) }}</p>
+			<h2 class="text-center">{{ ucwords($author->name) }}</h2>
 
 			@if ($author->email)
 				<label>E-mail</label>
@@ -34,7 +33,7 @@
 			@endif
 
 			<label>Status</label>
-			<p>{{ ucwords($author->status) }}</p>			
+			<p>{{ ucwords($author->status) }}</p>
 
 			@if ($author->degree)
 				<label>Degree</label>
@@ -63,7 +62,7 @@
 					</li>
 				@endforeach
 				</ul>
-			@endif			
-		</div> 
+			@endif
+		</div>
 	</div>﻿
 @endsection

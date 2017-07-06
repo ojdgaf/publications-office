@@ -5,7 +5,7 @@
 @endsection
 
 @section('css')
-	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}" 
+	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}"
 	type="text/css">
 @endsection
 
@@ -20,7 +20,7 @@
 			<hr>
 
 			@include(
-				'layouts/partials/_button-to-edit', 
+				'layouts/partials/_button-to-edit',
 				['model' => 'literature',
 				'id' => $literature->id,
 			])
@@ -28,17 +28,15 @@
 			@if (!is_null($literature->cover_path))
 				<div class="row indent">
 					<div class="col-md-6">
-						<label>Title</label>
-						<p>{{ $literature->title }}</p>
+						<h2 class="text-center">{{ $literature->title }}</h2>
 					</div>
 					<div class="col-md-6">
 						<img class="cover"
 						src="{{ asset('storage/' . $literature->cover_path) }}">
 					</div>
 				</div>
-			@else		
-				<label>Title</label>
-				<p>{{ $literature->title }}</p>
+			@else
+				<h2 class="fancy-align">{{ $literature->title }}</h2>
 			@endif
 
 			@if (isset($literature->description))
@@ -64,7 +62,7 @@
 				@endif
 			@endif
 
-			@if ($literature->type == 'book' || 
+			@if ($literature->type == 'book' ||
 				 $literature->type == 'conference proceedings')
 				<label>Size</label>
 				<p>{{ $literature->size }}</p>
@@ -95,7 +93,7 @@
 				</ul>
 			@endif
 
-			@if (isset($literature->publications) && 
+			@if (isset($literature->publications) &&
 			     $literature->publications->count() != 0)
 				<hr>
 				<label>Available publications</label>
@@ -109,6 +107,6 @@
 				@endforeach
 				</ul>
 			@endif
-		</div> 
+		</div>
 	</div>﻿
 @endsection

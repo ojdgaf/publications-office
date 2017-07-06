@@ -131,7 +131,7 @@ class LiteratureController extends Controller
             return redirect()->route('literature.index')
                 ->with('error', 'Such literature doesn\'t exist!');
         }
-        
+
         DB::transaction(function() use (&$literature) {
             DatabaseLiterature::where('literature_id', $literature->id)->delete();
             $literature->delete();
@@ -144,6 +144,19 @@ class LiteratureController extends Controller
     //======================================================================
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
+
+    public function filter(Request $request)
+    {
+        $literature = Literature::filter($request->all());
+
+        if ($literature->isEmpty()) {
+            return redirect()->route('literature.index')
+                ->with('error', 'No matching literature found');
+        }
+
+        return view('pages/literature/index')
+            ->withLiterature($literature);
+    }
 
     private function fill(&$literature, $request)
     {
@@ -177,19 +190,12 @@ class LiteratureController extends Controller
 
     private function updateFile($newFile, $oldFilePath)
     {
-        // there's an update with new cover
         if ($newFile) {
-            //delete previous cover if it exists
-            if ($oldFilePath) {
-                Storage::delete($oldFilePath);
-            }
-
-            // save new cover and return the path
+            if ($oldFilePath) Storage::delete($oldFilePath);
             return $newFile->store('literature/covers');
         }
 
-        // there's an update without new cover
-        return null;
+        return $oldFilePath;
     }
 
     //======================================================================
@@ -227,14 +233,12 @@ class LiteratureController extends Controller
             $literature = Literature::find($id);
 
             if ($literature) {
-                return view(
-                    'pages/literature/create-update parts/_form-book-proceedings'
-                    )
+                return view('pages/literature/create-update parts/_form-book-or-proceedings')
                     ->withLiterature($literature);
             }
         }
 
         // return view for create
-        return view('pages/literature/create-update parts/_form-book-proceedings');
+        return view('pages/literature/create-update parts/_form-book-or-proceedings');
     }
 }

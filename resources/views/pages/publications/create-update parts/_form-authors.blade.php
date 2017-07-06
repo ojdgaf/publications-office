@@ -14,11 +14,10 @@
 
 <!-- Authors button -->
 <div class="row indent">
-    <div class="col-md-12">
-        <button id="btn-author"
-            class="btn btn-default btn-info pull-right" type="button"
-            title="Add another author (up to 5)">
-                Another
-        </button>
+  <div class="col-md-12">
+    <div class="btn-group pull-right" role="group">
+      <button id="btn-author-append" type="button" class="btn btn-default btn-info" title="Add another author (up to 5)">Append</button>
+      <button id="btn-author-delete" type="button" class="btn btn-default btn-danger" title="Delete last added author">Delete</button>
     </div>
+  </div>
 </div>

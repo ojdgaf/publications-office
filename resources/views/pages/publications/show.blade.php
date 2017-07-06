@@ -19,13 +19,12 @@
 			<hr>
 
 			@include(
-				'layouts/partials/_button-to-edit', 
+				'layouts/partials/_button-to-edit',
 				['model' => 'publications',
 				'id' => $publication->id,
 			])
 
-			<label>Heading</label>
-			<p>{{ $publication->heading }}</p>
+			<h2 class="fancy-align">{{ $publication->heading }}</h2>
 
 			<label>Abstract</label>
 			<p>{{ $publication->abstract }}</p>
@@ -56,7 +55,7 @@
 			<p>
 				<strong>Page range: </strong>
 				{{ $publication->page_initial }}
-				 - 
+				 -
 				{{ $publication->page_final }}
 			</p>
 
@@ -80,12 +79,11 @@
 
 			<div class="row indent">
 				<div class="col-md-4 col-md-offset-4">
-					<a href="{{ asset('storage/' . $publication->document_path) }}" 
-					class="btn btn-primary btn-lg btn-block">
+					<a download href="{{ asset('storage/' . $publication->document_path) }}" class="btn btn-primary btn-lg btn-block">
 						Download publication
 					</a>
 				</div>
 			</div>
-		</div> 
+		</div>
 	</div>﻿
 @endsection
