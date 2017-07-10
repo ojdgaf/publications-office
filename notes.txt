@@ -3,3 +3,5 @@ publications collision within same literature is possible
 a date of adding literature to database can be lower than literature (book/proceedings) publishing date
 
 you can select the 'department staff' status for publication author even if he/she is only a student (or 'other')
+
+for database validation class 'http://example.com' and 'http://example.com/' are not equal

@@ -201,14 +201,14 @@ class PublicationController extends Controller
 
     private function storeFile($heading, $newFile)
     {
-        $newName = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
+        $newName = preg_replace('([^\w\s\d\-_~,;\[\]\(\)])', '', $heading);
         $newExtension = $newFile->extension();
         return $newFile->storeAs('publications', $newName . '.' . $newExtension);
     }
 
     private function updateFile($heading, $newFile, $oldFilePath)
     {
-        $newName = preg_replace("([^\w\s\d\-_~,;/\[\]\(\)])", '', $heading);
+        $newName = preg_replace('([^\w\s\d\-_~,;\[\]\(\)])', '', $heading);
 
         // update file
         if ($newFile) {

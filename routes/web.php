@@ -45,3 +45,11 @@ Route::get('/literature/form-book-proceedings/{id?}',
 	'LiteratureController@addBookOrProceedingsForm');
 // -------------------------------------- RESOURCE --------------------------->
 Route::resource('/literature', 'LiteratureController');
+
+
+//=============================================================================
+    // DATABASES
+//=============================================================================
+
+// -------------------------------------- RESOURCE --------------------------->
+Route::resource('/databases', 'DatabaseController');

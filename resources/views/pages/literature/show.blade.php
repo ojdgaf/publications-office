@@ -78,11 +78,11 @@
 
 			@if (isset($literature->databases) && $literature->databases->count() != 0)
 				<hr>
-				<label>Bibliographic databases</label>
+				<label>Relevant bibliographic databases</label>
 				<ul>
 				@foreach ($literature->databases as $database)
 					<li>
-						<a href="{{ $database->url }}">
+						<a href="{{ route('databases.show', $database->id) }}">
 							{{ $database->name }}
 						</a>
 						<span>

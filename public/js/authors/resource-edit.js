@@ -1,6 +1,5 @@
-"use strict";
-
 $(function() {
+    'use strict';
 	var authorSelect = $('select[name=status]');
 	var authorStatus = $('#div-author-status');
 	var authorId = $('#id-author').html();
