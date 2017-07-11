@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Database;
 use App\DatabaseLiterature;
+
 use App\Http\Requests\StoreDatabase;
 use Illuminate\Http\Request;
+
+use Illuminate\Support\Facades\DB;
 
 class DatabaseController extends Controller
 {
@@ -89,8 +92,10 @@ class DatabaseController extends Controller
                 ->with('error', 'Such database doesn\'t exist!');
         }
 
-        DatabaseLiterature::where('database_id', $id)->delete();
-        $database->delete();
+        DB::transaction(function() use (&$database) {
+            DatabaseLiterature::where('database_id', $id)->delete();
+            $database->delete();
+        }, 5);
 
         return redirect()->route('databases.index')
             ->with('success', 'Database was successfully deleted');
@@ -99,6 +104,19 @@ class DatabaseController extends Controller
     //======================================================================
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
+
+    public function filter(Request $request)
+    {
+        $databases = Database::filter($request->all());
+
+        if ($databases->isEmpty()) {
+            return redirect()->route('databases.index')
+                ->with('error', 'No matching databases found');
+        }
+
+        return view('pages/databases/index')
+            ->withDatabases($databases);
+    }
 
     private function fill(&$database, $request)
     {

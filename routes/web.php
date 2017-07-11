@@ -19,7 +19,6 @@ Route::get('/publications/ajax/literature-titles/{type}/{publicationId?}', 'Publ
 Route::get('/publications/ajax/literature-form/{literatureId}/{publicationId?}', 'PublicationController@addLiteratureForm');
 // -------------------------------------- RESOURCE --------------------------->
 Route::get('/publications/filter', 'PublicationController@filter')->name('publications.filter');
-
 Route::resource('/publications', 'PublicationController');
 
 
@@ -31,6 +30,7 @@ Route::resource('/publications', 'PublicationController');
 Route::get('/authors/form-student/{id?}', 'AuthorController@addStudentForm');
 Route::get('/authors/form-staff/{id?}', 'AuthorController@addStaffForm');
 // -------------------------------------- RESOURCE --------------------------->
+Route::get('/authors/filter', 'AuthorController@filter')->name('authors.filter');
 Route::resource('/authors', 'AuthorController');
 
 
@@ -44,6 +44,7 @@ Route::get('/literature/form-journal/{id?}', 'LiteratureController@addJournalFor
 Route::get('/literature/form-book-proceedings/{id?}',
 	'LiteratureController@addBookOrProceedingsForm');
 // -------------------------------------- RESOURCE --------------------------->
+Route::get('/literature/filter', 'LiteratureController@filter')->name('literature.filter');
 Route::resource('/literature', 'LiteratureController');
 
 
@@ -52,4 +53,5 @@ Route::resource('/literature', 'LiteratureController');
 //=============================================================================
 
 // -------------------------------------- RESOURCE --------------------------->
+Route::get('/databases/filter', 'DatabaseController@filter')->name('databases.filter');
 Route::resource('/databases', 'DatabaseController');

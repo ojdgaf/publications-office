@@ -108,6 +108,19 @@ class AuthorController extends Controller
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
 
+    public function filter(Request $request)
+    {
+        $authors = Author::filter($request->all());
+
+        if ($authors->isEmpty()) {
+            return redirect()->route('authors.index')
+                ->with('error', 'No matching authors found');
+        }
+
+        return view('pages/authors/index')
+            ->withAuthors($authors);
+    }
+
     private function fill(&$author, $request)
     {
         $author->name =             $request->name;
@@ -133,7 +146,7 @@ class AuthorController extends Controller
                     ->withAuthor($author)
                     ->withDegrees(Author::getAuthorStudentDegrees());
             }
-        } 
+        }
 
         // return view for create
         return view('pages/authors/create-update parts/_form-student')

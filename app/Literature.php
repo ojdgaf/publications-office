@@ -42,9 +42,7 @@ class Literature extends Model
 
     public static function filter($parameters = null, $itemsPerPage = 10)
     {
-        return self::
-            where($parameters)
-            ->paginate($itemsPerPage);
+        return self::where($parameters)->orderBy('title')->paginate($itemsPerPage);
     }
 
     // <================================================================================>

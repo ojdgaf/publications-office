@@ -22,7 +22,7 @@ class Publication extends Model
     {
         return self::
             join(
-                'author_publication', 
+                'author_publication',
                 'publications.id', '=', 'author_publication.publication_id'
             )
             ->select(
@@ -32,27 +32,28 @@ class Publication extends Model
             ->where($parameters)
             ->select('publications.*')
             ->distinct()
+            ->orderBy('heading')
             ->paginate($itemsPerPage);
     }
 
     // <================================================================================>
 
-    public static function getPublicationIssueNumbers() 
+    public static function getPublicationIssueNumbers()
     {
     	return self::$issueNumbers;
     }
 
-    public static function getPublicationTypes() 
+    public static function getPublicationTypes()
     {
         return self::$types;
     }
 
-    public static function getPublicationGenres() 
+    public static function getPublicationGenres()
     {
         return self::$genres;
     }
 
-    public static function getPublicationExtensions() 
+    public static function getPublicationExtensions()
     {
         return self::$extensions;
     }

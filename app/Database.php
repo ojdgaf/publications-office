@@ -23,10 +23,7 @@ class Database extends Model
 
     public static function filter($parameters = null, $itemsPerPage = 10)
     {
-        return self::
-            where($parameters)
-            ->distinct()
-            ->paginate($itemsPerPage);
+        return self::where($parameters)->orderBy('name')->paginate($itemsPerPage);
     }
 
     // <================================================================================>

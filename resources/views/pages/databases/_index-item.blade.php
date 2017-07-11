@@ -14,7 +14,9 @@
   <!-- ACCESS MODE -->
   <div class="indent">
 		<p class="list-group-item-text">
-			<a href="#" class="info">{{ $database->access_mode }}</a>
+			<a href="{{ route('databases.filter', ['access_mode' => $database->access_mode]) }}" class="info">
+        {{ $database->access_mode }}
+      </a>
 		</p>
 	</div>
 </div>

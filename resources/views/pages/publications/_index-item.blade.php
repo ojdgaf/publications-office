@@ -1,7 +1,7 @@
 <div class="list-group-item">
 	<!-- HEADING -->
 	<h4 class="list-group-item-heading">
-		<a href="{{ route('publications.show', $publication->id) }}"title="{{ $publication->abstract }}">
+		<a href="{{ route('publications.show', $publication->id) }}" title="{{ $publication->abstract }}">
       {{ $publication->heading }}
 		</a>
 	</h4>
