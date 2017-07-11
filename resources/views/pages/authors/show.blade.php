@@ -52,7 +52,7 @@
 
 			@if (isset($author->publications) && $author->publications->count() != 0)
 				<hr>
-				<label>Publications</label>
+				<label>Relevant publications ({{ $author->publications->count() }})</label>
 				<ul>
 				@foreach($author->publications as $publication)
 					<li>

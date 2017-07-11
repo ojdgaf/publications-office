@@ -44,7 +44,7 @@
 
 			@if (isset($database->literature) && $database->literature->count() != 0)
 				<hr>
-				<label>Relevant literature</label>
+				<label>Relevant literature ({{ $database->literature->count() }})</label>
 				<ul>
 				@foreach($database->literature as $literature)
 					<li>

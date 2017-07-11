@@ -23,7 +23,7 @@
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">More <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">About</a></li>
+                <li><a href="/search">Advanced search</a></li>
                 <li><a href="#">Report an issue</a></li>
                 <li><a href="#">Something else here</a></li>
                 <li role="separator" class="divider"></li>
@@ -34,11 +34,12 @@
             </li>
           </ul>
 
-          <form class="navbar-form navbar-left">
+          <form method="POST" action="{{ route('search.search') }}" class="navbar-form navbar-left">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Type title or name">
+                <input type="search" name="query" class="form-control">
             </div>
             <button type="submit" class="btn btn-default">Search</button>
+            {{ csrf_field() }}
           </form>
 
           <ul class="nav navbar-nav navbar-right">

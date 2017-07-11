@@ -61,7 +61,12 @@
 
 			<hr>
 
-			<label>Authors</label>
+			@if ($publication->authors->count() == 1)
+        <label>Author</label>
+      @else
+        <label>Authors ({{ $publication->authors->count() }})</label>
+      @endif
+
 			<ul>
 			@foreach ($publication->authors as $author)
 				<li>
@@ -69,7 +74,7 @@
 						{{ $author->name }}
 					</a>
 					<span>
-						 ({{ ucwords($author->pivot->status_author) }})
+						 (as {{ $author->pivot->status_author }})
 					</span>
 				</li>
 			@endforeach

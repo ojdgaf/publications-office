@@ -78,7 +78,7 @@
 
 			@if (isset($literature->databases) && $literature->databases->count() != 0)
 				<hr>
-				<label>Relevant bibliographic databases</label>
+				<label>Relevant bibliographic databases ({{ $literature->databases->count() }})</label>
 				<ul>
 				@foreach ($literature->databases as $database)
 					<li>
