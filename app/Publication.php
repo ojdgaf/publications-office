@@ -3,11 +3,15 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-
-// <====================================================================================>
+use Sofa\Eloquence\Eloquence;
 
 class Publication extends Model
 {
+    use Eloquence;
+    protected $searchableColumns = ['heading', 'abstract', 'description',
+                                    'genre', 'type', 'issue_year',
+                                    'issue_number', 'page_initial', 'page_final'];
+
     public function literature()
     {
         return $this->belongsTo('App\Literature');

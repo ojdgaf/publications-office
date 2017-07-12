@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Sofa\Eloquence\Eloquence;
 
 class Database extends Model
 {
+    use Eloquence;
+    protected $searchableColumns = ['name', 'description', 'url', 'access_mode'];
+
     // MUTATOR: URL is unique otherwise NULL
     public function setUrlAttribute($value)
     {
