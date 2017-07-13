@@ -6,7 +6,7 @@
 
 Route::get('/', 'PageController@index');
 Route::get('/search', 'SearchController@index')->name('search.index');
-Route::post('/search', 'SearchController@search')->name('search.search');
+Route::post('/search', 'SearchController@basic')->name('search.basic');
 Route::get('/profile', 'PageController@getProfile');
 
 

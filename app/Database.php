@@ -3,12 +3,19 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Sofa\Eloquence\Eloquence;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Database extends Model
 {
-    use Eloquence;
-    protected $searchableColumns = ['name', 'description', 'url', 'access_mode'];
+    use SearchableTrait;
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+            'description' => 9,
+            'url' => 8,
+            'access_mode' => 7,
+        ],
+    ];
 
     // MUTATOR: URL is unique otherwise NULL
     public function setUrlAttribute($value)

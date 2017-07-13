@@ -3,12 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Sofa\Eloquence\Eloquence;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Author extends Model
 {
-    use Eloquence;
-    protected $searchableColumns = ['name', 'email'];
+    use SearchableTrait;
+    protected $searchable = [
+        'columns' => [
+            'name' => 10,
+            'email' => 9,
+        ],
+    ];
 
 	// MUTATOR: email is unique otherwise NULL
     public function setEmailAttribute($value)

@@ -3,14 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Sofa\Eloquence\Eloquence;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Publication extends Model
 {
-    use Eloquence;
-    protected $searchableColumns = ['heading', 'abstract', 'description',
-                                    'genre', 'type', 'issue_year',
-                                    'issue_number', 'page_initial', 'page_final'];
+    use SearchableTrait;
+    protected $searchable = [
+        'columns' => [
+            'heading' => 10,
+            'description' => 9,
+            'abstract' => 8,
+            'genre' => 7,
+            'type' => 6,
+            'issue_number' => 5,
+            'issue_year' => 5,
+            'page_initial' => 4,
+            'page_final' => 4,
+        ],
+    ];
 
     public function literature()
     {

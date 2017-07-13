@@ -3,14 +3,24 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Sofa\Eloquence\Eloquence;
+use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Literature extends Model
 {
-    use Eloquence;
-    protected $searchableColumns = ['title', 'description', 'publisher',
-                                    'type', 'periodicity', 'issn',
-                                    'size', 'issue_year', 'isbn'];
+    use SearchableTrait;
+    protected $searchable = [
+        'columns' => [
+            'title' => 10,
+            'description' => 9,
+            'publisher' => 8,
+            'issue_year' => 7,
+            'size' => 6,
+            'type' => 5,
+            'issn' => 4,
+            'isbn' => 4,
+            'periodicity' => 2,
+        ],
+    ];
 
     protected $table = 'literature'; // overriding table name
 

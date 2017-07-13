@@ -180,7 +180,7 @@ return [
         /*
          * My Providers
          */
-        Sofa\Eloquence\ServiceProvider::class,
+        // Sofa\Eloquence\ServiceProvider::class,
 
     ],
 

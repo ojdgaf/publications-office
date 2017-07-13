@@ -34,9 +34,9 @@
             </li>
           </ul>
 
-          <form method="POST" action="{{ route('search.search') }}" class="navbar-form navbar-left">
+          <form method="POST" action="{{ route('search.basic') }}" class="navbar-form navbar-left">
             <div class="form-group">
-                <input type="search" name="query" class="form-control">
+                <input type="search" name="query" class="form-control" placeholder="For example name, title or ISBN/ISSN" size="30">
             </div>
             <button type="submit" class="btn btn-default">Search</button>
             {{ csrf_field() }}

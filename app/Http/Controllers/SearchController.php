@@ -15,9 +15,13 @@ class SearchController extends Controller
 		return view('pages/search/index');
 	}
 
-    public function search(Request $request)
+    public function basic(Request $request)
     {
-        $query = $request->input('query');
+        $query = trim($request->input('query'));
+
+        if (!$query)
+            return redirect()->route('search.basic')
+                ->with('error', 'Input query!');
 
         $publications = Publication::search($query)->get();
         $literature = Literature::search($query)->get();
