@@ -3,11 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Database extends Model
 {
-    use SearchableTrait;
     protected $searchable = [
         'columns' => [
             'name' => 10,
@@ -30,11 +28,6 @@ class Database extends Model
     public function literature()
     {
         return $this->belongsToMany('App\Literature')->withPivot('date');
-    }
-
-    public static function filter($parameters = null, $itemsPerPage = 10)
-    {
-        return self::where($parameters)->orderBy('name')->paginate($itemsPerPage);
     }
 
     // <================================================================================>

@@ -10,7 +10,7 @@
 @section('content')
 	<h1>Result</h1>
 
-  @if ($publications->isNotEmpty())
+  @if (isset($publications) && $publications->isNotEmpty())
     <h2><span style="font-size: 0.7em;" id="header-1">+/-</span> Publications</h2>
 
     <div id="panel-1" class="list-group">
@@ -20,7 +20,7 @@
   	</div>
   @endif
 
-  @if ($literature->isNotEmpty())
+  @if (isset($literature) && $literature->isNotEmpty())
     <h2><span style="font-size: 0.7em;" id="header-2">+/-</span> Literature</h2>
 
     <div id="panel-2" class="list-group">
@@ -32,7 +32,7 @@
   	</div>
   @endif
 
-  @if ($authors->isNotEmpty())
+  @if (isset($authors) && $authors->isNotEmpty())
     <h2><span style="font-size: 0.7em;" id="header-3">+/-</span> Authors</h2>
 
     <div id="panel-3" class="list-group">
@@ -42,7 +42,7 @@
   	</div>
   @endif
 
-  @if ($databases->isNotEmpty())
+  @if (isset($databases) && $databases->isNotEmpty())
     <h2><span style="font-size: 0.7em;" id="header-4">+/-</span> Databases</h2>
 
     <div id="panel-4" class="list-group">

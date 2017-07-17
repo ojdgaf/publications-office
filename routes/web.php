@@ -5,9 +5,19 @@
 //=============================================================================
 
 Route::get('/', 'PageController@index');
-Route::get('/search', 'SearchController@index')->name('search.index');
-Route::post('/search', 'SearchController@basic')->name('search.basic');
 Route::get('/profile', 'PageController@getProfile');
+
+
+//=============================================================================
+    // SEARCH
+//=============================================================================
+
+// -------------------------------------- AJAX ------------------------------->
+Route::get('/search/ajax/{entity}', 'SearchController@addForm');
+// -------------------------------------- RESOURCE --------------------------->
+Route::get('/search', 'SearchController@index')->name('search.index');
+Route::post('/search/basic', 'SearchController@basic')->name('search.basic');
+Route::post('/search/advanced', 'SearchController@advanced')->name('search.advanced');
 
 
 //=============================================================================

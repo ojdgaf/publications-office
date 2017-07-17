@@ -157,7 +157,7 @@ class PublicationController extends Controller
 
     public function filter(Request $request)
     {
-        $publications = Publication::filter($request->all());
+        $publications = Publication::filterWithJoin($request->all());
 
         if ($publications->isEmpty()) {
             return redirect()->route('publications.index')

@@ -3,11 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Author extends Model
 {
-    use SearchableTrait;
     protected $searchable = [
         'columns' => [
             'name' => 10,
@@ -28,11 +26,6 @@ class Author extends Model
     public function publications()
     {
         return $this->belongsToMany('App\Publication')->withPivot('status_author');
-    }
-
-    public static function filter($parameters = null, $itemsPerPage = 10)
-    {
-        return self::where($parameters)->orderBy('name')->paginate($itemsPerPage);
     }
 
     // <================================================================================>

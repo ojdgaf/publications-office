@@ -3,26 +3,25 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Literature extends Model
 {
-    use SearchableTrait;
+    protected $table = 'literature'; // overriding table name
+
     protected $searchable = [
         'columns' => [
             'title' => 10,
-            'description' => 9,
+            'issn' => 9,
+            'isbn' => 9,
             'publisher' => 8,
             'issue_year' => 7,
             'size' => 6,
             'type' => 5,
-            'issn' => 4,
-            'isbn' => 4,
-            'periodicity' => 2,
+            'description' => 4,
+            'periodicity' => 3,
         ],
     ];
 
-    protected $table = 'literature'; // overriding table name
 
     // MUTATOR: ISSN is unique otherwise NULL
     public function setIssnAttribute($value)
@@ -52,11 +51,6 @@ class Literature extends Model
     public function databases()
     {
         return $this->belongsToMany('App\Database')->withPivot('date');
-    }
-
-    public static function filter($parameters = null, $itemsPerPage = 10)
-    {
-        return self::where($parameters)->orderBy('title')->paginate($itemsPerPage);
     }
 
     // <================================================================================>

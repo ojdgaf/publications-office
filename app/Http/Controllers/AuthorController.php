@@ -110,7 +110,7 @@ class AuthorController extends Controller
 
     public function filter(Request $request)
     {
-        $authors = Author::filter($request->all());
+        $authors = Author::filter('name', $request->all());
 
         if ($authors->isEmpty()) {
             return redirect()->route('authors.index')

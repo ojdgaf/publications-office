@@ -147,7 +147,7 @@ class LiteratureController extends Controller
 
     public function filter(Request $request)
     {
-        $literature = Literature::filter($request->all());
+        $literature = Literature::filter('title', $request->all());
 
         if ($literature->isEmpty()) {
             return redirect()->route('literature.index')

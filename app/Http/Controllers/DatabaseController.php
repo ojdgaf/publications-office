@@ -107,7 +107,7 @@ class DatabaseController extends Controller
 
     public function filter(Request $request)
     {
-        $databases = Database::filter($request->all());
+        $databases = Database::filter('name', $request->all());
 
         if ($databases->isEmpty()) {
             return redirect()->route('databases.index')

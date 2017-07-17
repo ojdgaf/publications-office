@@ -3,11 +3,9 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Nicolaslopezj\Searchable\SearchableTrait;
 
 class Publication extends Model
 {
-    use SearchableTrait;
     protected $searchable = [
         'columns' => [
             'heading' => 10,
@@ -32,7 +30,7 @@ class Publication extends Model
         return $this->belongsToMany('App\Author')->withPivot('status_author');
     }
 
-    public static function filter($parameters = null, $itemsPerPage = 10)
+    public static function filterWithJoin($parameters = null, $itemsPerPage = 10)
     {
         return self::
             join(
