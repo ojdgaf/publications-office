@@ -13,12 +13,6 @@
 
 			<hr>
 
-      @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
-      @endif
-
       <form method="POST" action="{{ route('password.email') }}">
         <label>E-Mail Address</label>
         <input type="email" class="form-control" name="email"

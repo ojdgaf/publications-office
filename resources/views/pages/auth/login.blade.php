@@ -1,6 +1,6 @@
 @extends('layouts/main')
 
-@section('title', 'PO | Login')
+@section('title', 'PO | Authorization')
 
 @section('css')
 	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}">

@@ -13,12 +13,6 @@
 
 			<hr>
 
-      @if (session('status'))
-        <div class="alert alert-success">
-            {{ session('status') }}
-        </div>
-      @endif
-
       <form method="POST" action="{{ route('password.request') }}">
         <label>Email</label>
         <input type="email" class="form-control" name="email"
@@ -30,7 +24,7 @@
         <label>Confirm Password</label>
         <input type="password" class="form-control" name="password_confirmation" required>
 
-        <input type="submit" value="Reset" class="btn btn-info btn-lg btn-block">
+        <input type="submit" value="Reset" class="btn btn-info btn-lg btn-block indent">
 
         <input type="hidden" name="token" value="{{ $token }}">
         {{ csrf_field() }}
