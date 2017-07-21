@@ -36,14 +36,38 @@
 
           <form method="POST" action="{{ route('search.basic') }}" class="navbar-form navbar-left">
             <div class="form-group">
-                <input type="search" name="query" class="form-control" placeholder="For example name, title or ISBN/ISSN" size="30">
+                <input type="search" name="query" class="form-control" placeholder="For example name, title or ISBN" size="30">
             </div>
             <button type="submit" class="btn btn-default">Search</button>
             {{ csrf_field() }}
           </form>
 
           <ul class="nav navbar-nav navbar-right">
-            <li @yield('activeProfile')><a href="/profile">Profile</a></li>
+            @if (Auth::guest())
+                <li @yield('activeProfile')><a href="{{ route('login') }}">Login</a></li>
+                <li @yield('activeProfile')><a href="{{ route('register') }}">Register</a></li>
+            @else
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                        {{ Auth::user()->name }} <span class="caret"></span>
+                    </a>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+            @endif
+
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Operations<span class="caret"></span></a>
               <ul class="dropdown-menu">

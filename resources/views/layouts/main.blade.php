@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
     <head>
         @include('layouts/partials/_head')
