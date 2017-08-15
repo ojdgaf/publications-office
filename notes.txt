@@ -5,3 +5,5 @@ a date of adding literature to database can be lower than literature (book/proce
 you can select the 'department staff' status for publication author even if he/she is only a student (or 'other')
 
 for database validation class 'http://example.com' and 'http://example.com/' are not equal
+
+stupid main page layout, has to be changed

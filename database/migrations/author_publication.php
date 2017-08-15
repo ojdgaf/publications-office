@@ -11,10 +11,10 @@ class CreatePublicationAuthorsTable extends Migration
     public function up()
     {
         Schema::create('author_publication', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('author_id');
             $table->unsignedInteger('publication_id');
             $table->enum('status_author', Author::getAuthorStatuses())->default('other');
-            $table->timestamps();
         });
     }
 

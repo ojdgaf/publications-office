@@ -7,7 +7,7 @@
 @endsection
 
 @section('css')
-	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}" 
+	<link rel="stylesheet" href="{{ asset('css/resource-edit.css') }}"
 	type="text/css">
 	<link rel="stylesheet" href="{{ asset('css/parsley.css') }}" type="text/css">
 @endsection
@@ -22,12 +22,12 @@
 			<!-- NEW LITERATURE MODAL FORM -->
 			{{-- @include('pages/publications/create parts/modals/_modal-literature') --}}
 
-			<form method="POST" data-parsley-validate enctype="multipart/form-data" 
+			<form method="POST" data-parsley-validate enctype="multipart/form-data"
 			action="{{ route('publications.store') }}">
 
 				<p id="id-publication" hidden></p>
 
-				<div class="form-group">	
+				<div class="form-group">
 					<!-- FORM -->
 					@include('pages/publications/create-update parts/_form')
 

@@ -28,39 +28,34 @@ class PublicationController extends Controller
     {
         $publications = Publication::orderBy('heading')->paginate(10);
 
-        return view('pages/publications/index')
-            ->withPublications($publications);
+        return view('pages/publications/index', compact('publications'));
     }
 
     public function create()
     {
-        return view('pages/publications/create')
-            ->withGenres(Publication::getPublicationGenres())
-            ->withTypes(Publication::getPublicationTypes())
-
-            ->withAuthors(Author::all())
-            ->withStatuses(Author::getAuthorStatuses());
+        return view('pages/publications/create', [
+            'genres' =>     Publication::getPublicationGenres(),
+            'types' =>      Publication::getPublicationTypes(),
+            'authors' =>    Author::all(),
+            'statuses' =>   Author::getAuthorStatuses()
+        ]);
     }
 
     public function store(StorePublication $request)
     {
-        $id = DB::transaction(function() use ($request) {
-            $publication = new Publication();
-            $this->fill($publication, $request);
-            $publication->document_path = $this->storeFile(
-                                              $request->heading,
-                                              $request->file('document')
-                                          );
-            $publication->save();
+        $id = DB::transaction(function() use (&$request) {
+            $input = $request->all();
+            $input['document_path'] = $this->storeFile(
+                                        $request->heading,
+                                        $request->file('document'));
 
-            $this->storeAuthors(
-                $publication->id,
-                $request->id_author,
-                $request->status_author
-            );
+            $publication = Publication::create($input);
+
+            $publication->authors()->attach(
+                $this->alterAuthorsArray($input['authors']));
 
             return $publication->id;
-        }, 5);
+        }, 3);
 
         return redirect()->route('publications.show', $id)
             ->with('success', 'New publication was successfully saved');
@@ -68,65 +63,47 @@ class PublicationController extends Controller
 
     public function show($id)
     {
-        $publication = Publication::find($id);
-
-        if (!$publication) {
+        if (! $publication = Publication::find($id))
             return redirect()->route('publications.index')
                 ->with('error', 'Such publication doesn\'t exist!');
-        }
 
-        return view('pages/publications/show')
-            ->withPublication($publication);
+        return view('pages/publications/show', compact('publication'));
     }
 
     public function edit($id)
     {
-        $publication = Publication::find($id);
-
-        if (!$publication) {
+        if (! $publication = Publication::find($id))
             return redirect()->route('publications.index')
                 ->with('error', 'Such publication doesn\'t exist!');
-        }
 
-        return view('pages/publications/edit')
-            ->withPublication($publication)
-            ->withGenres(Publication::getPublicationGenres())
-            ->withTypes(Publication::getPublicationTypes())
-
-            ->withAuthors(Author::all())
-            ->withStatuses(Author::getAuthorStatuses())
-
-            ->withLiterature(Literature::all());
+        return view('pages/publications/edit', [
+            'publication' =>    $publication,
+            'genres' =>         Publication::getPublicationGenres(),
+            'types' =>          Publication::getPublicationTypes(),
+            'authors' =>        Author::all(),
+            'statuses' =>       Author::getAuthorStatuses(),
+            'literature' =>     Literature::all()
+        ]);
     }
 
     public function update(StorePublication $request, $id)
     {
-        $publication = Publication::find($id);
-
-        if (!$publication) {
+        if (! $publication = Publication::find($id))
             return redirect()->route('publications.index')
                 ->with('error', 'Such publication doesn\'t exist!');
-        }
 
-        DB::transaction(function() use ($request, &$publication) {
-            $this->fill($publication, $request);
-            $publication->document_path = $this->updateFile(
-                                              $request->heading,
-                                              $request->file('document'),
-                                              $publication->document_path
-                                          );
-            $publication->save();
+        DB::transaction(function() use (&$request, &$publication) {
+            $input = $request->all();
+            $input['document_path'] = $this->updateFile(
+                                        $request->heading,
+                                        $request->file('document'),
+                                        $publication->document_path);
 
-            // delete all previous related authors
-            AuthorPublication::where('publication_id', $publication->id)->delete();
+            $publication->fill($input)->save();
 
-            // add new authors
-            $this->storeAuthors(
-                $publication->id,
-                $request->id_author,
-                $request->status_author
-            );
-        }, 5);
+            $publication->authors()->sync(
+                $this->alterAuthorsArray($input['authors']));
+        }, 3);
 
         return redirect()->route('publications.show', $publication->id)
             ->with('success', 'Publication was successfully updated');
@@ -134,18 +111,15 @@ class PublicationController extends Controller
 
     public function destroy($id)
     {
-        $publication = Publication::find($id);
-
-        if (!$publication) {
+        if (! $publication = Publication::find($id))
             return redirect()->route('publications.index')
                 ->with('error', 'Such publication doesn\'t exist!');
-        }
 
         DB::transaction(function() use (&$publication) {
             Storage::delete($publication->document_path);
-            AuthorPublication::where('publication_id', $publication->id)->delete();
+            $publication->authors()->detach();
             $publication->delete();
-        }, 5);
+        }, 3);
 
         return redirect()->route('publications.index')
             ->with('success', 'Publication was successfully deleted');
@@ -155,48 +129,50 @@ class PublicationController extends Controller
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
 
+    /**
+     * Return suitable array for attach() method
+     *
+     * @var array
+     * @return array
+     */
+    private function alterAuthorsArray($authors)
+    {
+        /*
+            $authors = [
+                1 => [author_id => 'X', 'status_author' => 'A'],
+                ...
+                5 => [author_id => 'Y', 'status_author' => 'B'],
+            ]
+
+            to
+
+            $authors = [
+                X => ['status_author' => A],
+                ...
+                Y => ['status_author' => B],
+            ]
+        */
+
+        $result = [];
+
+        foreach ($authors as $author) {
+            $result[$author['author_id']] = [
+                'status_author' => $author['status_author']
+            ];
+        }
+
+        return $result;
+    }
+
     public function filter(Request $request)
     {
         $publications = Publication::filterWithJoin($request->all());
 
-        if ($publications->isEmpty()) {
+        if ($publications->isEmpty())
             return redirect()->route('publications.index')
                 ->with('error', 'No matching publications found');
-        }
 
-        return view('pages/publications/index')
-            ->withPublications($publications);
-    }
-
-    private function fill(&$publication, $request)
-    {
-        $publication->heading =         $request->heading;
-        $publication->abstract =        $request->abstract;
-        $publication->description =     $request->description;
-        $publication->genre =           $request->genre;
-        $publication->type =            $request->type;
-        $publication->literature_id =   $request->literature_id;
-        $publication->issue_number =    $request->issue_number;
-        $publication->issue_year =      $request->issue_year;
-        $publication->page_initial =    $request->page_initial;
-        $publication->page_final =      $request->page_final;
-    }
-
-    private function storeAuthors($publicationId, $ids, $statuses)
-    {
-        if (!empty($ids) && !empty($statuses)) {
-            for ($i = 0; $i < 5; $i++) {
-                if ( isset($ids[$i]) && isset($statuses[$i]) ) {
-                    $publicationAuthor = new AuthorPublication();
-
-                    $publicationAuthor->author_id           = $ids[$i];
-                    $publicationAuthor->publication_id      = $publicationId;
-                    $publicationAuthor->status_author       = $statuses[$i];
-
-                    $publicationAuthor->save();
-                }
-            }
-        }
+        return view('pages/publications/index', compact('publications'));
     }
 
     private function storeFile($heading, $newFile)
@@ -229,11 +205,13 @@ class PublicationController extends Controller
     // AJAX REQUESTS' CONTROLLERS
     //======================================================================
 
-    public function addAuthorForm()
+    public function addAuthorForm($number)
     {
-        return view('pages/publications/create-update parts/_form-author')
-            ->withAuthors(Author::all())
-            ->withStatuses(Author::getAuthorStatuses());
+        return view('pages/publications/create-update parts/_form-author', [
+            'authors' => Author::all(),
+            'statuses' => Author::getAuthorStatuses(),
+            'number' => $number
+        ]);
     }
 
     public function addLiteratureTitles($type, $publicationId = null)
@@ -242,44 +220,44 @@ class PublicationController extends Controller
         $type = str_replace('_', ' ', $type);
 
         // find literature according to chosen type
-        if (in_array($type, Literature::getLiteratureTypes())) {
+        if (in_array($type, Literature::getLiteratureTypes()))
             $literature = Literature::where('type', $type)->get();
-        }
 
         // publication id is given - mark related literature
         if ($publicationId) {
             $literatureActive = Publication::find($publicationId)->literature;
 
-            if ($literatureActive->type == $type) {
-                return view('pages/publications/create-update parts/_form-literature-titles')
-                    ->with('literatureActive', $literatureActive)
-                    ->withLiterature($literature);
-            }
+            if ($literatureActive->type == $type)
+                return view(
+                        'pages/publications/create-update parts/_form-literature-titles',
+                        compact('literature', 'literatureActive'));
         }
 
-        return view('pages/publications/create-update parts/_form-literature-titles')
-            ->withLiterature($literature);
+        return view(
+            'pages/publications/create-update parts/_form-literature-titles',
+            compact('literature'));
     }
 
     public function addLiteratureForm($literatureId, $publicationId = null)
     {
         $literature = Literature::find($literatureId);
 
-        $viewPath = $literature->type == 'journal' ? 'journal' : 'book-or-proceedings';
+        $viewPath = ($literature->type == 'journal') ? 'journal' : 'book-or-proceedings';
 
         // return view for edit
         if ($publicationId) {
             $publication = Publication::find($publicationId);
 
             if ($publication->literature_id == $literatureId) {
-                return view('pages/publications/create-update parts/_form-' . $viewPath)
-                    ->withPublication($publication)
-                    ->withLiterature($literature);
+                return view(
+                    'pages/publications/create-update parts/_form-' . $viewPath,
+                    compact('publication', 'literature'));
             }
         }
 
         // return view for create
-        return view('pages/publications/create-update parts/_form-' . $viewPath)
-            ->withLiterature($literature);
+        return view(
+            'pages/publications/create-update parts/_form-' . $viewPath,
+            compact('literature'));
     }
 }

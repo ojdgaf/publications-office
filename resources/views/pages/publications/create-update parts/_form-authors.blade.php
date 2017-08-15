@@ -4,11 +4,16 @@
 <!-- Authors container -->
 <div id="div-authors">
 	@if (isset($publication->authors))
-		@foreach ($publication->authors as $authorActive)
-    		@include('pages/publications/create-update parts/_form-author', $authorActive)
+		@foreach ($publication->authors as $activeAuthor)
+    		@include('pages/publications/create-update parts/_form-author', [
+          'activeAuthor' => $activeAuthor,
+          'number' => $loop->iteration
+        ])
     	@endforeach
     @else
-    	@include('pages/publications/create-update parts/_form-author')
+    	@include('pages/publications/create-update parts/_form-author', [
+        'number' => 1
+      ])
     @endif
 </div>
 

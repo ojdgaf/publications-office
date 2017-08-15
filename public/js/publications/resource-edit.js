@@ -54,8 +54,7 @@ $(function() {
     // make AJAX request
     function loadAuthorForm() {
         if (counter < limit) {
-            authorsDiv.append($('<div></div>').load('/publications/ajax/author-form'));
-            counter++;
+            authorsDiv.append($('<div></div>').load('/publications/ajax/author-form/' + (++counter)));
         }
     }
 

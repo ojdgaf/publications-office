@@ -19,23 +19,20 @@ class StorePublication extends FormRequest
 
     public function rules()
     {
-        // getting values
         $type =                     $this->request->get('type');
         $literatureId =             $this->request->get('literature_id');
         $pageInitial =              $this->request->get('page_initial');
-        $ids =                      $this->request->get('id_author');
-        $statuses =                 $this->request->get('status_author');
 
         $authorMaxId = Author::max('id');
         $literatureMaxId = Literature::max('id');
-
         $pageFinalLimit = Literature::find($literatureId)->size;
 
         $rules = [
             'heading' =>            ['required',
                                     'string',
                                     'between:10,180',
-                                    Rule::unique('publications')->ignore($this->publication),
+                                    Rule::unique('publications')
+                                        ->ignore($this->publication),
                                     ],
 
             'abstract' =>           ['required',
@@ -53,25 +50,26 @@ class StorePublication extends FormRequest
                                     Rule::in(Publication::getPublicationGenres()),
                                     ],
 
-            // at least one author
-            'id_author' =>          ['required',
+            'authors' =>            ['required',
                                     'array',
+                                    'between:1,5',
                                     ],
 
-            'status_author' =>      ['required',
+            'authors.*' =>          ['required',
                                     'array',
+                                    'size:2',
                                     ],
 
-            'id_author.*' =>        ['required',
-                                    'integer',
-                                    'distinct',
-                                    'between:1,' . $authorMaxId,
-                                    ],
+            'authors.*.author_id' =>    ['required',
+                                        'integer',
+                                        'distinct',
+                                        'between:1,' . $authorMaxId,
+                                        ],
 
-            'status_author.*' =>    ['required',
-                                    'string',
-                                    Rule::in(Author::getAuthorStatuses()),
-                                    ],
+            'authors.*.status_author'=> ['required',
+                                        'string',
+                                        Rule::in(Author::getAuthorStatuses()),
+                                        ],
 
             'type' =>               ['required',
                                     'string',
@@ -118,56 +116,14 @@ class StorePublication extends FormRequest
 
             $rules['page_final'] =      ['required',
                                         'integer',
-                                        'between:' . $pageInitial . ',' . $pageFinalLimit,
+                                        'between:' .
+                                            $pageInitial . ',' . $pageFinalLimit,
                                         ];
         }
 
         // updating a publication file is not necessary
         if ($this->publication) {
             $rules['document'] = ['file', 'mimes:doc,docx,pdf,odt,txt'];
-        }
-
-        // <======================= fetch the first five elements ===========>
-        if (count($ids) > 5) {
-            $ids = array_slice($ids, 0, 5);
-        }
-
-        if (count($statuses) > 5) {
-            $statuses = array_slice($statuses, 0, 5);
-        }
-
-        // <======================= set relative requirements ===============>
-        if ( !empty($ids) ) {
-            foreach ($ids as $key => $value) {
-                /*
-                *  id_author[i] <-> status_author[i]
-                *        \\                 \\
-                *       value               null
-                */
-                if ( isset($value) && !isset($statuses[$key]) ) {
-                    $rules['status_author.' . $key] =   ['required',
-                                                        'string',
-                                                Rule::in(Author::getAuthorStatuses()),
-                                                        ];
-                }
-            }
-        }
-
-        if ( !empty($statuses) ) {
-            foreach ($statuses as $key => $value) {
-                /*
-                *  id_author[i] <-> status_author[i]
-                *        \\                 \\
-                *       null               value
-                */
-                if ( isset($value) && !isset($ids[$key]) ) {
-                    $rules['id_author.' . $key] =       ['required',
-                                                        'integer',
-                                                        'distinct',
-                                                        'between:1,' . $authorMaxId,
-                                                        ];
-                }
-            }
         }
 
         return $rules;
@@ -184,42 +140,22 @@ class StorePublication extends FormRequest
         $messages['type.in'] = 'Type must be one of following values: ' .
             implode(", ", Publication::getpublicationTypes());
         $messages['literature_id.between'] = 'Literature must be present in a database';
-        $messages['issue_number.required_if'] = 'Issue number is required if type is ' .
-            '"Journal article"';
+        $messages['issue_number.required_if'] = 'Issue number' .
+            'is required if type is "Journal article"';
         $messages['issue_number.in'] = 'Issue number is a number from 1 to 12';
-        $messages['issue_year.required_if'] = 'Issue year is required if type is "Journal article"';
+        $messages['issue_year.required_if'] = 'Issue year' .
+            'is required if type is "Journal article"';
         $messages['page_initial.required'] = 'Initial page is required';
-        $messages['page_initial.between'] = 'Initial page should be in a range between ' . '1 and size of literature';
+        $messages['page_initial.between'] = 'Initial page' .
+            'should be in a range between 1 and size of literature';
         $messages['page_final.required'] = 'Final page is required';
         $messages['page_final.between'] = 'Final page should be in a range between ' .
             'initial page and size of literature';
-        $messages['document.mimes'] = 'Uploaded publication document must have one of following extensions: .DOC, .DOCX, .PDF, .TXT, .ODT';
-
-        for ($i = 0; $i < 5; $i ++) {
-            // <======================= id ===============>
-            $messages['id_author.' . $i . '.required'] = 'Author #' .
-                ($i + 1) . ' name must be chosen';
-
-            $messages['id_author.' . $i . '.integer'] = 'Author #' .
-                ($i + 1) . ' name is invalid value';
-
-            $messages['id_author.' . $i . '.distinct'] = 'Author #' .
-                ($i + 1) . ' name has one or more duplicates';
-
-            $messages['id_author.' . $i . '.between'] = 'Author #' .
-                ($i + 1) . ' must be present in a database';
-
-            // <======================= status ============>
-            $messages['status_author.' . $i . '.required'] = 'Author #' .
-                ($i + 1) . ' status must be chosen';
-
-            $messages['status_author.' . $i . '.string'] = 'Author #' .
-                ($i + 1) . ' status is invalid value';
-
-            $messages['status_author.' . $i . '.in'] = 'Author #' .
-                ($i + 1) . ' status must be one of following values: ' .
-                implode(", ", Author::getAuthorStatuses());
-        }
+        $messages['document.mimes'] = 'Uploaded publication document' .
+            'must have one of following extensions: .DOC, .DOCX, .PDF, .TXT, .ODT';
+        $messages['authors.*.author_id.between'] = 'Author must be present in a database';
+        $messages['authors.*.status_author.in'] = 'Author\'s status' .
+            'must be one of following values: ' . implode(", ", Author::getAuthorStatuses());
 
         return $messages;
     }

@@ -27,7 +27,7 @@ Route::post('/search/advanced', 'SearchController@advanced')->name('search.advan
 //=============================================================================
 
 // -------------------------------------- AJAX ------------------------------->
-Route::get('/publications/ajax/author-form', 'PublicationController@addAuthorForm');
+Route::get('/publications/ajax/author-form/{number}', 'PublicationController@addAuthorForm');
 Route::get('/publications/ajax/literature-titles/{type}/{publicationId?}', 'PublicationController@addLiteratureTitles');
 Route::get('/publications/ajax/literature-form/{literatureId}/{publicationId?}', 'PublicationController@addLiteratureForm');
 // -------------------------------------- RESOURCE --------------------------->

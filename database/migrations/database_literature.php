@@ -9,10 +9,10 @@ class CreateLiteratureDatabasesTable extends Migration
     public function up()
     {
         Schema::create('database_literature', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('database_id');
             $table->unsignedInteger('literature_id');
             $table->date('date')->nullable();
-            $table->timestamps();
         });
     }
 

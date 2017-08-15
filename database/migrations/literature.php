@@ -26,6 +26,7 @@ class CreateLiteraturesTable extends Migration
             $table->unsignedInteger('issue_year')->nullable();
             $table->string('isbn', 17)->unique()->nullable();
 
+            $table->string('cover_path', 180)->nullable();
             $table->timestamps();
         });
     }

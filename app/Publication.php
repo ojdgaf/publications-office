@@ -6,6 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Publication extends Model
 {
+    protected $fillable = [
+        'heading', 'abstract', 'description',
+        'genre', 'type', 'literature_id',
+        'issue_number', 'issue_year', 'page_initial',
+        'page_final', 'document_path',
+    ];
+
     protected $searchable = [
         'columns' => [
             'heading' => 10,
