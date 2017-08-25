@@ -5,7 +5,6 @@ namespace App\Http\Requests;
 use App\Author;
 use Validator;
 use Illuminate\Validation\Rule;
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreAuthor extends FormRequest
@@ -26,7 +25,7 @@ class StoreAuthor extends FormRequest
             'email' =>              ['nullable',
                                     'string',
                 'regex: /^([a-z0-9_\.\+-]{2,32})@([\da-z\.-]{2,10})\.([a-z\.]{2,6})$/',
-                                    Rule::unique('authors')->ignore($this->author),
+                            Rule::unique('authors')->ignore($this->author),
                                     ],
 
             'status' =>             ['required',
@@ -38,9 +37,9 @@ class StoreAuthor extends FormRequest
                                     'string',
                                     Rule::in(Author::getAuthorRanks()),
                                     ],
-                                    
+
             'post' =>               ['required_if:status,department staff',
-                                    'string', 
+                                    'string',
                                     'regex:/^[A-Za-z\s\'\.,-]{3,100}$/',
                                     ],
         ];

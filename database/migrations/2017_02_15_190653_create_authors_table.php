@@ -24,6 +24,7 @@ class CreateAuthorsTable extends Migration
             $table->string('post', 150)->nullable();
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

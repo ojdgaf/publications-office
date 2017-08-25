@@ -1,8 +1,9 @@
-$(function() {
+$(() => {
     'use strict';
-	var authorSelect = $('select[name=status]');
-	var authorStatus = $('#div-author-status');
-	var authorId = $('#id-author').html();
+
+	let authorSelect = $('select[name=status]');
+	let authorStatus = $('#div-author-status');
+	let authorId = $('#id-author').html();
 
 	// load additional form immediately for EDIT purposes
 	loadAuthorForm();
@@ -13,9 +14,9 @@ $(function() {
 	// make AJAX request
 	function loadAuthorForm() {
 		if (authorSelect.val() == 'student') {
-	    	authorStatus.load('/authors/form-student/' + authorId);
+	    	authorStatus.load('/authors/ajax/for-student/' + authorId);
 	    } else if (authorSelect.val() == 'department staff') {
-	    	authorStatus.load('/authors/form-staff/' + authorId);
+	    	authorStatus.load('/authors/ajax/for-staff/' + authorId);
 	    } else {
 	    	authorStatus.empty();
 	    }

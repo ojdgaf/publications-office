@@ -4,10 +4,8 @@ namespace App\Http\Requests;
 
 use App\Literature;
 use App\Database;
-
 use Validator;
 use Illuminate\Validation\Rule;
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreLiterature extends FormRequest
@@ -19,8 +17,6 @@ class StoreLiterature extends FormRequest
 
     public function rules()
     {
-        $databaseQuantity = Database::all()->count();
-
         $rules = [
             'title' =>              ['required',
                                     'string',
@@ -56,7 +52,7 @@ class StoreLiterature extends FormRequest
 
             'size' =>               ['required_if:type,book,type,conference proceedings',
                                     'integer',
-                                    'between:1,3000', 
+                                    'between:1,3000',
                                     ],
 
             'issue_year' =>         ['required_if:type,book,type,conference proceedings',
@@ -71,13 +67,25 @@ class StoreLiterature extends FormRequest
                                     'regex:/^[\-\d]{11,17}$/',
                                     ],
 
-            'id_database.*' =>      ['nullable',
-                                    'integer',
-                                    'distinct',
-                                    'between:1,' . $databaseQuantity,
+            'databases' =>          ['required',
+                                    'array',
+                                    'between:1,5',
                                     ],
 
-            'date_database.*' =>    ['nullable',
+            'databases.*' =>        ['required',
+                                    'array',
+                                    'between:1,2',
+                                    ],
+
+            'databases.*.database_id' =>    ['nullable',
+                                            'required_with:databases.*.date',
+                                            'integer',
+                                            'distinct',
+                                            'exists:databases,id',
+                                            ],
+
+            'databases.*.date'=>    ['nullable',
+                                    'required_with:databases.*.database_id',
                                     'date',
                                     'after_or_equal:January 01 1990',
                                     'before_or_equal:' . date('F d Y'),
@@ -87,34 +95,6 @@ class StoreLiterature extends FormRequest
                                     'image',
                                     ],
         ];
-
-        $ids = $this->request->get('id_database');
-        $dates = $this->request->get('date_database');
-
-        // id_database[i] and date_database[i] are both NULL or filled
-        if (!empty($ids)) {
-            foreach ($ids as $key => $value) {
-                if (isset($value)) {
-                    $rules['date_database.' . $key] =   ['required',
-                                                    'date',
-                                                    'after_or_equal:January 01 1990',
-                                                    'before_or_equal:' . date('F d Y'),
-                    ];
-                }
-            }
-        }
-
-        if (!empty($dates)) {
-            foreach ($dates as $key => $value) {
-                if (isset($value)) {
-                    $rules['id_database.' . $key] =     ['required',
-                                                        'integer',
-                                                        'distinct',
-                                                        'between:1,' . $databaseQuantity,
-                    ];
-                }
-            }
-        }
 
         return $rules;
     }
@@ -132,25 +112,14 @@ class StoreLiterature extends FormRequest
             'either "Book" or "Conference roceedings"';
         $messages['issue_year.required_if'] = 'Issue year is required if type is ' .
             'either "Book" or "Conference roceedings"';
-
-        for ($i = 0; $i < 5; $i ++) {
-            // <======================= id ===============>
-            $messages['id_database.' . $i . '.required'] = 'Database #' .
-                ($i + 1) . ' name must be chosen';
-
-            $messages['id_database.' . $i . '.integer'] = 'Database #' .
-                ($i + 1) . ' name is invalid value';
-
-            $messages['id_database.' . $i . '.distinct'] = 'Database #' .
-                ($i + 1) . ' name has one or more duplicates';
-
-            $messages['id_database.' . $i . '.between'] = 'Database #' .
-                ($i + 1) . ' must be present in a database';
-
-            // <======================= date =============>
-            $messages['date_database.' . $i . '.required'] = 'Database #' .
-                ($i + 1) . ' adding date must be chosen';
-        }
+        $messages['databases.*.date.required_with'] = 'Each database ' .
+            'must have corresponding date of adding';
+        $messages['databases.*.database_id.required_with'] = 'Empty database name ' .
+            'with selected date';
+        $messages['databases.*.database_id.distinct'] = 'Databases ' .
+            'should not be repeated';
+        $messages['databases.*.database_id.exists'] = 'Database(s) ' .
+            'must be present in a database';
 
         return $messages;
     }

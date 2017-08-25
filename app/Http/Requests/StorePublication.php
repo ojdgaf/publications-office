@@ -7,7 +7,6 @@ use App\Author;
 use App\Literature;
 use Validator;
 use Illuminate\Validation\Rule;
-
 use Illuminate\Foundation\Http\FormRequest;
 
 class StorePublication extends FormRequest
@@ -22,9 +21,6 @@ class StorePublication extends FormRequest
         $type =                     $this->request->get('type');
         $literatureId =             $this->request->get('literature_id');
         $pageInitial =              $this->request->get('page_initial');
-
-        $authorMaxId = Author::max('id');
-        $literatureMaxId = Literature::max('id');
         $pageFinalLimit = Literature::find($literatureId)->size;
 
         $rules = [
@@ -63,7 +59,7 @@ class StorePublication extends FormRequest
             'authors.*.author_id' =>    ['required',
                                         'integer',
                                         'distinct',
-                                        'between:1,' . $authorMaxId,
+                                        'exists:authors,id',
                                         ],
 
             'authors.*.status_author'=> ['required',
@@ -78,7 +74,7 @@ class StorePublication extends FormRequest
 
             'literature_id' =>      ['required',
                                     'integer',
-                                    'between:1,' . $literatureMaxId,
+                                    'exists:literature,id',
                                     ],
 
             'issue_number' =>       ['required_if:type,journal article',
@@ -139,7 +135,7 @@ class StorePublication extends FormRequest
         $messages['genre.in'] = 'Genre is invalid value';
         $messages['type.in'] = 'Type must be one of following values: ' .
             implode(", ", Publication::getpublicationTypes());
-        $messages['literature_id.between'] = 'Literature must be present in a database';
+        $messages['literature_id.exists'] = 'Literature must be present in a database';
         $messages['issue_number.required_if'] = 'Issue number' .
             'is required if type is "Journal article"';
         $messages['issue_number.in'] = 'Issue number is a number from 1 to 12';
@@ -153,9 +149,12 @@ class StorePublication extends FormRequest
             'initial page and size of literature';
         $messages['document.mimes'] = 'Uploaded publication document' .
             'must have one of following extensions: .DOC, .DOCX, .PDF, .TXT, .ODT';
-        $messages['authors.*.author_id.between'] = 'Author must be present in a database';
         $messages['authors.*.status_author.in'] = 'Author\'s status' .
             'must be one of following values: ' . implode(", ", Author::getAuthorStatuses());
+        $messages['authors.*.author_id.distinct'] = 'Authors ' .
+            'should not be repeated';
+        $messages['authors.*.author_id.exists'] = 'Author(s) ' .
+            'must be present in a database';
 
         return $messages;
     }

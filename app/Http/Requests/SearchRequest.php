@@ -6,7 +6,6 @@ use App\Publication;
 use App\Literature;
 use App\Author;
 use App\Database;
-
 use Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;

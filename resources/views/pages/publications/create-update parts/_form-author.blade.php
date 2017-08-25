@@ -1,7 +1,6 @@
 <div class="row indent">
 	<!-- Author -->
 	<div class="col-md-6 col-xs-6">
-		{{-- <select name="id_author[]" class="form-control" required> --}}
     <select name="authors[{{ $number }}][author_id]" class="form-control" required>
 			@if (isset($activeAuthor))
 				<option selected value="{{ $activeAuthor->id }}">
@@ -15,7 +14,7 @@
 					@endif
 				@endforeach
 			@else
-				<option selected disabled value="">Find author below</option>
+				<option selected disabled value="">Find the author below</option>
 				@foreach ($authors as $author)
 					<option value="{{ $author->id }}">
 						{{ ucwords($author->name) }}
@@ -27,7 +26,6 @@
 
 	<!-- Status -->
 	<div class="col-md-6 col-xs-6">
-    {{-- <select name="status_author[]" class="form-control" title="At the time of writing" required> --}}
     <select name="authors[{{ $number }}][status_author]" class="form-control" title="At the time of writing" required>
 
 			@if (isset($activeAuthor))

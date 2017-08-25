@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Database extends Model
 {
+    protected $fillable = [
+        'name', 'description', 'url',
+        'access_mode'
+    ];
+    
     protected $searchable = [
         'columns' => [
             'name' => 10,

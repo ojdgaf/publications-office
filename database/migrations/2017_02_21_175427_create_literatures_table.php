@@ -28,6 +28,7 @@ class CreateLiteraturesTable extends Migration
 
             $table->string('cover_path', 180)->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

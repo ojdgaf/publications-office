@@ -6,6 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class Author extends Model
 {
+    protected $fillable = [
+        'name', 'email', 'status',
+        'degree', 'rank', 'post'
+    ];
+
     protected $searchable = [
         'columns' => [
             'name' => 10,

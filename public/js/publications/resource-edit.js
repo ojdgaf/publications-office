@@ -1,19 +1,20 @@
-$(function() {
+$(() => {
     'use strict';
 
     // if it is editing page, publication id will be submitted with every request
-    var publicationId = $('#id-publication').html();
+    let publicationId = $('#id-publication').html();
 
-    var authorsDiv = $('#div-authors');
-    var authorAppendButton = $('#btn-author-append');
-    var authorDeleteButton = $('#btn-author-delete');
-    var publicationTypeSelect = $('select[name=type]');
-    var literatureNameDiv = $('#div-literature-name');
-    var literatureNameSelect;
-    var literatureFormDiv = $('#div-literature-form');
+    let authorsDiv = $('#div-authors');
+    let authorAppendButton = $('#btn-author-append');
+    let authorDeleteButton = $('#btn-author-delete');
+    
+    let publicationTypeSelect = $('select[name=type]');
+    let literatureNameDiv = $('#div-literature-name');
+    let literatureNameSelect;
+    let literatureFormDiv = $('#div-literature-form');
 
-    var counter = authorsDiv.children().length;
-    var limit = 5;
+    let counter = authorsDiv.children().length;
+    let limit = 5;
 
     // initialize ajax loading immediately for editing purpose
     if (publicationId) loadLiteratureNames('edit');
@@ -44,7 +45,10 @@ $(function() {
             literatureNameSelect = $('select[name=literature_id]');
 
             literatureNameSelect.change(function() {
-                literatureFormDiv.load('/publications/ajax/literature-form/' + literatureNameSelect.val() + '/' + publicationId);
+                literatureFormDiv.load(
+                    '/publications/ajax/literature/' +
+                    literatureNameSelect.val() + '/' + publicationId
+                );
             });
 
             if (flag == 'edit') literatureNameSelect.trigger('change');
@@ -54,7 +58,7 @@ $(function() {
     // make AJAX request
     function loadAuthorForm() {
         if (counter < limit) {
-            authorsDiv.append($('<div></div>').load('/publications/ajax/author-form/' + (++counter)));
+            authorsDiv.append($('<div></div>').load('/publications/ajax/author/' + (++counter)));
         }
     }
 

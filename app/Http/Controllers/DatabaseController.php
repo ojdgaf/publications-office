@@ -3,99 +3,60 @@
 namespace App\Http\Controllers;
 
 use App\Database;
-use App\DatabaseLiterature;
-
-use App\Http\Requests\StoreDatabase;
 use Illuminate\Http\Request;
-
-use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreDatabase;
 
 class DatabaseController extends Controller
 {
-    //======================================================================
-    // RESOURCE MAIN METHODS
-    //======================================================================
-
     public function index()
     {
         $databases = Database::orderBy('name')->paginate(10);
 
-        return view('pages/databases/index')
-            ->withDatabases($databases);
+        return view('pages/databases/index', compact('databases'));
     }
 
     public function create()
     {
-        return view('pages/databases/create')
-            ->with('accessModes', Database::getDatabaseAccessModes());
+        return view('pages/databases/create', [
+            'accessModes' => Database::getDatabaseAccessModes()
+        ]);
     }
 
     public function store(StoreDatabase $request)
     {
-        $database = new Database();
-        $this->fill($database, $request);
-        $database->save();
+        $database = Database::create($request->all());
 
         return redirect()->route('databases.show', $database->id)
             ->with('success', 'New database was successfully saved');
     }
 
-    public function show($id)
+    public function show(Database $database)
     {
-        $database = Database::find($id);
-
-        if (!$database) {
-            return redirect()->route('databases.index')
-                ->with('error', 'Such database doesn\'t exist!');
-        }
-
-        return view('pages/databases/show')
-            ->withDatabase($database);
+        return view('pages/databases/show', compact('database'));
     }
 
-    public function edit($id)
+    public function edit(Database $database)
     {
-        $database = Database::find($id);
-
-        if (!$database) {
-            return redirect()->route('databases.index')
-                ->with('error', 'Such database doesn\'t exist!');
-        }
-
-        return view('pages/databases/edit')
-            ->withDatabase($database)
-            ->with('accessModes', Database::getDatabaseAccessModes());
+        return view('pages/databases/edit', [
+            'database' => $database,
+            'accessModes' => Database::getDatabaseAccessModes()
+        ]);
     }
 
     public function update(StoreDatabase $request, $id)
     {
-        $database = Database::find($id);
+        $database = Database::findOrFail($id);
 
-        if (!$database) {
-            return redirect()->route('databases.index')
-                ->with('error', 'Such database doesn\'t exist!');
-        }
-
-        $this->fill($database, $request);
-        $database->save();
+        $database->fill($request->all())->save();
 
         return redirect()->route('databases.show', $database->id)
             ->with('success', 'Database ' . $database->name . ' was successfully updated');
     }
 
-    public function destroy($id)
+    public function destroy(Database $database)
     {
-        $database = Database::find($id);
-
-        if (!$database) {
-            return redirect()->route('databases.index')
-                ->with('error', 'Such database doesn\'t exist!');
-        }
-
-        DB::transaction(function() use (&$database) {
-            DatabaseLiterature::where('database_id', $id)->delete();
-            $database->delete();
-        }, 5);
+        $database->literature()->detach();
+        $database->delete();
 
         return redirect()->route('databases.index')
             ->with('success', 'Database was successfully deleted');
@@ -114,15 +75,6 @@ class DatabaseController extends Controller
                 ->with('error', 'No matching databases found');
         }
 
-        return view('pages/databases/index')
-            ->withDatabases($databases);
-    }
-
-    private function fill(&$database, $request)
-    {
-        $database->name =             $request->name;
-        $database->description =      $request->description;
-        $database->url =              $request->url;
-        $database->access_mode =      $request->access_mode;
+        return view('pages/databases/index', compact('databases'));
     }
 }

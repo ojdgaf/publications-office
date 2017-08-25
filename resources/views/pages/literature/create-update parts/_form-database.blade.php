@@ -1,13 +1,13 @@
 <div class="row indent">
 	<!-- Base -->
 	<div class="col-md-6 col-xs-6">
-		<select name="id_database[]" class="form-control">
-			@if (isset($databaseActive))
-				<option selected value="{{ $databaseActive->id }}">
-					{{ ucwords($databaseActive->name) }} (Current)
+		<select name="databases[{{ $number }}][database_id]" class="form-control">
+			@if (isset($activeDatabase))
+				<option selected value="{{ $activeDatabase->id }}">
+					{{ ucwords($activeDatabase->name) }} (Current)
 				</option>
 				@foreach ($databases as $database)
-					@if ($database->id != $databaseActive->id)
+					@if ($database->id != $activeDatabase->id)
 						<option value="{{ $database->id }}">
 							{{ ucwords($database->name) }}
 						</option>
@@ -26,9 +26,9 @@
 
 	<!-- Date -->
 	<div class="col-md-6 col-xs-6">
-		<input name="date_database[]" type="date" class="form-control" 
+		<input name="databases[{{ $number }}][date]" type="date" class="form-control" 
 		min="1990-01-01" max="{{ date('Y-m-d') }}"
 		title="Date of adding to the respective bibliographic database"
-		value="{{ isset($databaseActive) ? $databaseActive->pivot->date : NULL }}">
+		value="{{ isset($activeDatabase) ? $activeDatabase->pivot->date : NULL }}">
 	</div>
 </div>

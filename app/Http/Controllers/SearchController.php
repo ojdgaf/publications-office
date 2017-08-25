@@ -6,9 +6,8 @@ use App\Publication;
 use App\Literature;
 use App\Author;
 use App\Database;
-
-use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
+use App\Http\Requests\SearchRequest;
 
 class SearchController extends Controller
 {
@@ -30,11 +29,10 @@ class SearchController extends Controller
         $authors = Author::search($query)->get();
         $databases = Database::search($query)->get();
 
-        return view('pages/search/result')
-            ->withPublications($publications)
-            ->withLiterature($literature)
-            ->withAuthors($authors)
-            ->withDatabases($databases);
+        return view(
+            'pages/search/result',
+            compact('publications', 'literature', 'authors', 'databases')
+        );
     }
 
     public function advanced(SearchRequest $request)
@@ -55,57 +53,21 @@ class SearchController extends Controller
 
         switch ($entity) {
             case 'publication':
-                return view('pages/search/result')
-                    ->withPublications(
-                        Publication::filterAndSearch($parameters, $query, 'heading', $interval)
-                    );
+                return view('pages/search/result', ['publications' =>
+                    Publication::filterAndSearch($parameters, $query, 'heading', $interval)
+                ]);
             case 'literature':
-                return view('pages/search/result')
-                    ->withLiterature(
-                        Literature::filterAndSearch($parameters, $query, 'title', $interval)
-                );
+                return view('pages/search/result', ['literature' =>
+                    Literature::filterAndSearch($parameters, $query, 'title', $interval)
+                ]);
             case 'author':
-                return view('pages/search/result')
-                    ->withAuthors(
-                        Author::filterAndSearch($parameters, $query, 'name')
-                );
+                return view('pages/search/result', ['authors' =>
+                    Author::filterAndSearch($parameters, $query, 'name')
+                ]);
             case 'database':
-                return view('pages/search/result')
-                    ->withDatabases(
-                        Database::filterAndSearch($parameters, $query, 'name')
-                    );
-        }
-
-        return redirect()->route('search.index')
-            ->with('error', 'Wrong request');
-    }
-
-    //======================================================================
-    // AJAX REQUESTS' CONTROLLERS
-    //======================================================================
-
-    public function addForm($entity)
-    {
-        switch ($entity) {
-            case 'publication':
-                return view('pages/search/parts/_form-' . $entity)
-                    ->withTypes(Publication::getPublicationTypes())
-                    ->withGenres(Publication::getPublicationGenres());
-
-            case 'literature':
-                return view('pages/search/parts/_form-' . $entity)
-                    ->withTypes(Literature::getLiteratureTypes())
-                    ->withPeriodicities(Literature::getLiteraturePeriodicities());
-
-            case 'author':
-                return view('pages/search/parts/_form-' . $entity)
-                    ->withStatuses(Author::getAuthorStatuses())
-                    ->withDegrees(Author::getAuthorDegrees())
-                    ->withRanks(Author::getAuthorRanks());
-
-            case 'database':
-                return view('pages/search/parts/_form-' . $entity)
-                    ->with('accessModes', Database::getDatabaseAccessModes());
+                return view('pages/search/result', ['databases' =>
+                    Database::filterAndSearch($parameters, $query, 'name')
+                ]);
         }
 
         return redirect()->route('search.index')

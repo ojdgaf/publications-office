@@ -8,6 +8,12 @@ class Literature extends Model
 {
     protected $table = 'literature'; // overriding table name
 
+    protected $fillable = [
+        'title', 'description', 'publisher',
+        'type', 'periodicity', 'issn',
+        'isbn', 'issue_year', 'size', 'cover_path'
+    ];
+
     protected $searchable = [
         'columns' => [
             'title' => 10,

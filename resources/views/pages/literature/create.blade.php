@@ -21,7 +21,7 @@
 			<form method="POST" data-parsley-validate enctype="multipart/form-data"
 			action="{{ route('literature.store') }}">
 				<p id="id-literature" hidden></p>
-				
+
 				<div class="form-group">
 					<!-- FORM -->
 					@include('pages/literature/create-update parts/_form')
@@ -39,7 +39,7 @@
 
 				{{ csrf_field() }}
 			</form>
-		</div> 
+		</div>
 	</div>﻿
 @endsection
 

@@ -16,6 +16,7 @@ class CreateDatabasesTable extends Migration
             $table->string('url', 180)->unique()->nullable();
             $table->enum('access_mode', Database::getDatabaseAccessModes());
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

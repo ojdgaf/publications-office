@@ -6,14 +6,16 @@
 <!-- Databases container -->
 <div id="div-databases">
 	@if (isset($literature->databases) && $literature->databases->count() != 0)
-		@foreach ($literature->databases as $databaseActive)
-			@include(
-				'pages/literature/create-update parts/_form-database',
-				$databaseActive
-			)
+		@foreach ($literature->databases as $activeDatabase)
+			@include('pages/literature/create-update parts/_form-database', [
+  		  'activeDatabase' => $activeDatabase,
+        'number' => $loop->iteration
+			])
 		@endforeach
 	@else
-		@include('pages/literature/create-update parts/_form-database')
+		@include('pages/literature/create-update parts/_form-database', [
+      'number' => 1
+    ])
 	@endif
 </div>
 
