@@ -55,8 +55,7 @@ class AuthorController extends Controller
 
     public function destroy(Author $author)
     {
-        $author->publications()->detach();
-        $author->delete();
+        $author->remove();
 
         return redirect()->route('authors.index')
             ->with('success', 'Author was successfully deleted');

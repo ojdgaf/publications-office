@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Publication extends Model
 {
@@ -29,12 +30,14 @@ class Publication extends Model
 
     public function literature()
     {
-        return $this->belongsTo('App\Literature');
+        return $this->belongsTo('App\Literature')->withTrashed();
     }
 
     public function authors()
     {
-        return $this->belongsToMany('App\Author')->withPivot('status_author');
+        return $this->belongsToMany('App\Author')
+            ->withPivot('status_author')
+            ->withTrashed();
     }
 
     public static function filterWithJoin($parameters = null, $itemsPerPage = 10)
@@ -53,6 +56,22 @@ class Publication extends Model
             ->distinct()
             ->orderBy('heading')
             ->paginate($itemsPerPage);
+    }
+
+    public function remove()
+    {
+        $relatedDeletedAuthors  =   $this->authors()->onlyTrashed()->get();
+        $relatedLiterature      =   $this->literature;
+
+        $this->authors()->detach();
+
+        foreach ($relatedDeletedAuthors as $author) $author->remove();
+
+        Storage::delete($this->document_path);
+
+        $this->delete();
+
+        if ($relatedLiterature->trashed()) $this->literature->remove();
     }
 
     // <================================================================================>

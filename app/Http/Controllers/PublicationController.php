@@ -42,7 +42,8 @@ class PublicationController extends Controller
         $publication = Publication::create($input);
 
         $publication->authors()->attach(
-            $this->alterAuthorsArray($input['authors']));
+            $this->alterAuthorsArray($input['authors'])
+        );
 
         return redirect()->route('publications.show', $publication->id)
             ->with('success', 'New publication was successfully saved');
@@ -56,12 +57,12 @@ class PublicationController extends Controller
     public function edit(Publication $publication)
     {
         return view('pages/publications/edit', [
-            'publication' =>    $publication,
-            'genres' =>         Publication::getPublicationGenres(),
-            'types' =>          Publication::getPublicationTypes(),
-            'authors' =>        Author::all(),
-            'statuses' =>       Author::getAuthorStatuses(),
-            'literature' =>     Literature::all()
+            'publication'   =>      $publication,
+            'genres'        =>      Publication::getPublicationGenres(),
+            'types'         =>      Publication::getPublicationTypes(),
+            'authors'       =>      Author::all(),
+            'statuses'      =>      Author::getAuthorStatuses(),
+            'literature'    =>      Literature::all()
         ]);
     }
 
@@ -78,7 +79,8 @@ class PublicationController extends Controller
         $publication->fill($input)->save();
 
         $publication->authors()->sync(
-            $this->alterAuthorsArray($input['authors']));
+            $this->alterAuthorsArray($input['authors'])
+        );
 
         return redirect()->route('publications.show', $publication->id)
             ->with('success', 'Publication was successfully updated');
@@ -86,9 +88,7 @@ class PublicationController extends Controller
 
     public function destroy(Publication $publication)
     {
-        Storage::delete($publication->document_path);
-        $publication->authors()->detach();
-        $publication->delete();
+        $publication->remove();
 
         return redirect()->route('publications.index')
             ->with('success', 'Publication was successfully deleted');

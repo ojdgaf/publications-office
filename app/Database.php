@@ -3,14 +3,17 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Database extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name', 'description', 'url',
         'access_mode'
     ];
-    
+
     protected $searchable = [
         'columns' => [
             'name' => 10,
@@ -19,6 +22,8 @@ class Database extends Model
             'access_mode' => 7,
         ],
     ];
+
+    protected $dates = ['deleted_at'];
 
     // MUTATOR: URL is unique otherwise NULL
     public function setUrlAttribute($value)
@@ -33,6 +38,11 @@ class Database extends Model
     public function literature()
     {
         return $this->belongsToMany('App\Literature')->withPivot('date');
+    }
+
+    public function remove()
+    {
+        $this->literature->isEmpty() ? $this->forceDelete() : $this->delete();
     }
 
     // <================================================================================>

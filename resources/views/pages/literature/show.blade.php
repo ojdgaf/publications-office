@@ -76,25 +76,32 @@
 				@endif
 			@endif
 
-			@if (isset($literature->databases) && $literature->databases->count() != 0)
+      @php $databases = $literature->databases()->withTrashed()->get(); @endphp
+
+			@if ($databases->isNotEmpty())
 				<hr>
-				<label>Relevant bibliographic databases ({{ $literature->databases->count() }})</label>
+				<label>Relevant bibliographic databases ({{ $databases->count() }})</label>
 				<ul>
-				@foreach ($literature->databases as $database)
+				@foreach ($databases as $database)
 					<li>
-						<a href="{{ route('databases.show', $database->id) }}">
-							{{ $database->name }}
-						</a>
-						<span>
-							 - from {{ $database->pivot->date }}
-						</span>
+            @if (! $database->trashed())
+  						<a href="{{ route('databases.show', $database->id) }}">
+  							{{ $database->name }}
+  						</a>
+  						<span>
+  							 - from {{ $database->pivot->date }}
+  						</span>
+            @else
+  						<span>
+  							{{ $database->name }} - from {{ $database->pivot->date }}
+  						</span>
+            @endif
 					</li>
 				@endforeach
 				</ul>
 			@endif
 
-			@if (isset($literature->publications) &&
-			     $literature->publications->count() != 0)
+			@if ($literature->publications->isNotEmpty())
 				<hr>
 				<label>Available publications</label>
 				<ul>

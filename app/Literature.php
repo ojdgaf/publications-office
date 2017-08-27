@@ -3,9 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Literature extends Model
 {
+    use SoftDeletes;
+
     protected $table = 'literature'; // overriding table name
 
     protected $fillable = [
@@ -28,6 +32,7 @@ class Literature extends Model
         ],
     ];
 
+    protected $dates = ['deleted_at'];
 
     // MUTATOR: ISSN is unique otherwise NULL
     public function setIssnAttribute($value)
@@ -57,6 +62,23 @@ class Literature extends Model
     public function databases()
     {
         return $this->belongsToMany('App\Database')->withPivot('date');
+    }
+
+    public function remove()
+    {
+        if ($this->publications->isEmpty()) {
+            $relatedDeletedDatabases = $this->databases()->onlyTrashed()->get();
+
+            $this->databases()->detach();
+
+            foreach ($relatedDeletedDatabases as $database) $database->remove();
+
+            Storage::delete($this->cover_path);
+
+            $this->forceDelete();
+        } else {
+            $this->delete();
+        }
     }
 
     // <================================================================================>

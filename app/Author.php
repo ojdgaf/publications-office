@@ -3,9 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Author extends Model
 {
+    use SoftDeletes;
+
     protected $fillable = [
         'name', 'email', 'status',
         'degree', 'rank', 'post'
@@ -17,6 +20,8 @@ class Author extends Model
             'email' => 9,
         ],
     ];
+
+    protected $dates = ['deleted_at'];
 
 	// MUTATOR: email is unique otherwise NULL
     public function setEmailAttribute($value)
@@ -31,6 +36,11 @@ class Author extends Model
     public function publications()
     {
         return $this->belongsToMany('App\Publication')->withPivot('status_author');
+    }
+
+    public function remove()
+    {
+        $this->publications->isEmpty() ? $this->forceDelete() : $this->delete();
     }
 
     // <================================================================================>

@@ -18,10 +18,10 @@ class StorePublication extends FormRequest
 
     public function rules()
     {
-        $type =                     $this->request->get('type');
-        $literatureId =             $this->request->get('literature_id');
-        $pageInitial =              $this->request->get('page_initial');
-        $pageFinalLimit = Literature::find($literatureId)->size;
+        $type =             $this->request->get('type');
+        $literatureId =     $this->request->get('literature_id');
+        $pageInitial =      $this->request->get('page_initial');
+        $pageFinalLimit =   Literature::withTrashed()->find($literatureId)->size;
 
         $rules = [
             'heading' =>            ['required',

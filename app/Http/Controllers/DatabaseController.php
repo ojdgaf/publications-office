@@ -55,8 +55,7 @@ class DatabaseController extends Controller
 
     public function destroy(Database $database)
     {
-        $database->literature()->detach();
-        $database->delete();
+        $database->remove();
 
         return redirect()->route('databases.index')
             ->with('success', 'Database was successfully deleted');

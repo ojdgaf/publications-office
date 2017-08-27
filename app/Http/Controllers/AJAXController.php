@@ -114,8 +114,8 @@ class AJAXController extends Controller
 
             if ($literatureActive->type == $type)
                 return view(
-                        'pages/publications/create-update parts/_form-literature-titles',
-                        compact('literature', 'literatureActive')
+                    'pages/publications/create-update parts/_form-literature-titles',
+                    compact('literature', 'literatureActive')
                 );
         }
 
@@ -127,7 +127,7 @@ class AJAXController extends Controller
 
     public function getLiteratureForm($literatureId, $publicationId = null)
     {
-        $literature = Literature::findOrFail($literatureId);
+        $literature = Literature::withTrashed()->findOrFail($literatureId);
 
         $viewPath = ($literature->type == 'journal') ? 'journal' : 'book-or-proceedings';
 

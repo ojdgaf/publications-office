@@ -77,9 +77,7 @@ class LiteratureController extends Controller
 
     public function destroy(Literature $literature)
     {
-        Storage::delete($literature->cover_path);
-        $literature->databases()->detach();
-        $literature->delete();
+        $literature->remove();
 
         return redirect()->route('literature.index')
             ->with('success', 'Literature was successfully deleted');

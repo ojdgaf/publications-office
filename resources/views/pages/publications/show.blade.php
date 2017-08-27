@@ -42,9 +42,14 @@
 
 			<label>Literature</label>
 			<p>
-				<a href="{{ route('literature.show', $publication->literature->id) }}">
-					{{ $publication->literature->title }}
-				</a>
+        @php $literature = $publication->literature; @endphp
+        @if (! $literature->trashed())
+  				<a href="{{ route('literature.show', $literature->id) }}">
+  					{{ $literature->title }}
+  				</a>
+        @else
+          {{ $literature->title }}
+        @endif
 			</p>
 
 			@if ($publication->type == 'journal article')
@@ -61,21 +66,29 @@
 
 			<hr>
 
-			@if ($publication->authors->count() == 1)
+      @php $authors = $publication->authors()->withTrashed()->get(); @endphp
+
+			@if ($authors->count() == 1)
         <label>Author</label>
       @else
-        <label>Authors ({{ $publication->authors->count() }})</label>
+        <label>Authors ({{ $authors->count() }})</label>
       @endif
 
 			<ul>
-			@foreach ($publication->authors as $author)
+			@foreach ($authors as $author)
 				<li>
-					<a href="{{ route('authors.show', $author->id) }}">
-						{{ $author->name }}
-					</a>
-					<span>
+          @if (! $author->trashed())
+  					<a href="{{ route('authors.show', $author->id) }}">
+  						{{ $author->name }}
+  					</a>
+  					<span>
 						 (as {{ $author->pivot->status_author }})
-					</span>
+  					</span>
+          @else
+            <span>
+						 {{ $author->name }} (as {{ $author->pivot->status_author }})
+  					</span>
+          @endif
 				</li>
 			@endforeach
 			</ul>
