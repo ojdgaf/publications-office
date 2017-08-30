@@ -66,16 +66,14 @@
 
 			<hr>
 
-      @php $authors = $publication->authors()->withTrashed()->get(); @endphp
-
-			@if ($authors->count() == 1)
+			@if ($publication->authors->count() == 1)
         <label>Author</label>
       @else
-        <label>Authors ({{ $authors->count() }})</label>
+        <label>Authors ({{ $publication->authors->count() }})</label>
       @endif
 
 			<ul>
-			@foreach ($authors as $author)
+			@foreach ($publication->authors as $author)
 				<li>
           @if (! $author->trashed())
   					<a href="{{ route('authors.show', $author->id) }}">

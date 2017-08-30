@@ -37,7 +37,9 @@ class Database extends Model
 
     public function literature()
     {
-        return $this->belongsToMany('App\Literature')->withPivot('date');
+        return $this->belongsToMany('App\Literature')
+            ->withPivot('date')
+            ->withTrashed();
     }
 
     public function remove()

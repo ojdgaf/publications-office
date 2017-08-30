@@ -42,7 +42,7 @@
 				<p>{{ $database->access_mode }}</p>
 			@endif
 
-			@if (isset($database->literature) && $database->literature->count() != 0)
+			@if ($database->literature->isNotEmpty())
 				<hr>
 				<label>Relevant literature ({{ $database->literature->count() }})</label>
 				<ul>

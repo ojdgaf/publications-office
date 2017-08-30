@@ -14,9 +14,17 @@
 @section('content')
 	<h1>Bibliographic databases</h1>
 
+  <p>
+    @if ($itemType === 'index')
+      <a href="{{ route('databases.archive') }}">Show archival</a>
+    @else
+      <a href="{{ route('databases.index') }}">Show active</a>
+    @endif
+  </p>
+
 	<div class="list-group">
 		@foreach ($databases as $database)
-			@include('pages/databases/_index-item', $database)
+			@include('pages/databases/_' . $itemType . '-item', $database)
 		@endforeach
 	</div>
 

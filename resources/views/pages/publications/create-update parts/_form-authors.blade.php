@@ -3,7 +3,7 @@
 
 <!-- Authors container -->
 <div id="div-authors">
-	@if (isset($publication->authors))
+	@if (isset($publication))
 		@foreach ($publication->authors as $activeAuthor)
     	@include('pages/publications/create-update parts/_form-author', [
         'activeAuthor' => $activeAuthor,

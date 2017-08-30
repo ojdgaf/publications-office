@@ -3,7 +3,7 @@
 @section('title', 'PO | Literature')
 
 @section('css')
-	<link rel="stylesheet" href="{{ asset('css/resource-index.css') }}" 
+	<link rel="stylesheet" href="{{ asset('css/resource-index.css') }}"
 	type="text/css">
 @endsection
 
@@ -14,9 +14,17 @@
 @section('content')
 	<h1>Literature</h1>
 
+  <p>
+    @if ($itemType === 'index')
+      <a href="{{ route('literature.archive') }}">Show archival</a>
+    @else
+      <a href="{{ route('literature.index') }}">Show active</a>
+    @endif
+  </p>
+
 	<div class="list-group">
 		@foreach ($literature as $key => $literatureSingle)
-			@include('pages/literature/_index-item', [
+			@include('pages/literature/_' . $itemType . '-item', [
 				'literature' => $literatureSingle,
 			])
 		@endforeach

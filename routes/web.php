@@ -8,7 +8,6 @@ Auth::routes();
 Route::get('/', 'PageController@index')->name('index');
 Route::get('/home', 'HomeController@index')->name('home');
 
-
 //=============================================================================
     // SEARCH
 //=============================================================================
@@ -19,7 +18,6 @@ Route::post('/search/basic', 'SearchController@basic')
 Route::post('/search/advanced', 'SearchController@advanced')
     ->name('search.advanced');
 
-
 //=============================================================================
     // PUBLICATIONS
 //=============================================================================
@@ -27,30 +25,49 @@ Route::get('/publications/filter', 'PublicationController@filter')
     ->name('publications.filter');
 Route::resource('/publications', 'PublicationController');
 
-
 //=============================================================================
     // AUTHORS
 //=============================================================================
 Route::get('/authors/filter', 'AuthorController@filter')
     ->name('authors.filter');
+
+Route::get('/authors/archive', 'AuthorController@archive')
+    ->name('authors.archive');
+Route::put('authors/archive/{author}', 'AuthorController@restore')
+    ->name('authors.restore');
+Route::delete('authors/archive/{author}', 'AuthorController@forceDestroy')
+    ->name('authors.forcedestroy');
+
 Route::resource('/authors', 'AuthorController');
-
-
 //=============================================================================
     // LITERATURE
 //=============================================================================
 Route::get('/literature/filter', 'LiteratureController@filter')
     ->name('literature.filter');
-Route::resource('/literature', 'LiteratureController');
 
+Route::get('/literature/archive', 'LiteratureController@archive')
+    ->name('literature.archive');
+Route::put('literature/archive/{literature}', 'LiteratureController@restore')
+    ->name('literature.restore');
+Route::delete('literature/archive/{literature}', 'LiteratureController@forceDestroy')
+    ->name('literature.forcedestroy');
+
+Route::resource('/literature', 'LiteratureController');
 
 //=============================================================================
     // DATABASES
 //=============================================================================
 Route::get('/databases/filter', 'DatabaseController@filter')
     ->name('databases.filter');
-Route::resource('/databases', 'DatabaseController');
 
+Route::get('/databases/archive', 'DatabaseController@archive')
+    ->name('databases.archive');
+Route::put('databases/archive/{database}', 'DatabaseController@restore')
+    ->name('databases.restore');
+Route::delete('databases/archive/{database}', 'DatabaseController@forceDestroy')
+    ->name('databases.forcedestroy');
+
+Route::resource('/databases', 'DatabaseController');
 //=============================================================================
     // AJAX
 //=============================================================================

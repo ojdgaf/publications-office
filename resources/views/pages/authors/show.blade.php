@@ -50,7 +50,7 @@
 				<p>{{ $author->post }}</p>
 			@endif
 
-			@if (isset($author->publications) && $author->publications->count() != 0)
+			@if ($author->publications->isNotEmpty())
 				<hr>
 				<label>Relevant publications ({{ $author->publications->count() }})</label>
 				<ul>

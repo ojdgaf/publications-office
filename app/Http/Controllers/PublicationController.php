@@ -21,6 +21,16 @@ class PublicationController extends Controller
         return view('pages/publications/index', compact('publications'));
     }
 
+    public function archival()
+    {
+        dd('ass');
+        $publications = Publication::onlyTrashed()
+            ->orderBy('heading')
+            ->paginate(10);
+
+        return view('pages/publications/index', compact('publications'));
+    }
+
     public function create()
     {
         return view('pages/publications/create', [

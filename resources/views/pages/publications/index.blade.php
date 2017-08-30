@@ -14,7 +14,7 @@
 	<h1>Publications</h1>
 
 	<div class="list-group">
-		@foreach ($publications as $key => $publication)
+		@foreach ($publications as $publication)
 			@include('pages/publications/_index-item', $publication)
 		@endforeach
 	</div>

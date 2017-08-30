@@ -10,9 +10,18 @@ class DatabaseController extends Controller
 {
     public function index()
     {
+        $itemType = 'index';
         $databases = Database::orderBy('name')->paginate(10);
 
-        return view('pages/databases/index', compact('databases'));
+        return view('pages/databases/index', compact('databases', 'itemType'));
+    }
+
+    public function archive()
+    {
+        $itemType = 'archival';
+        $databases = Database::onlyTrashed()->orderBy('name')->paginate(10);
+
+        return view('pages/databases/index', compact('databases', 'itemType'));
     }
 
     public function create()
@@ -61,19 +70,39 @@ class DatabaseController extends Controller
             ->with('success', 'Database was successfully deleted');
     }
 
+    public function forceDestroy($id)
+    {
+        $database = Database::onlyTrashed()->findOrFail($id);
+
+        $database->literature()->detach();
+
+        $database->forceDelete();
+
+        return redirect()->route('databases.archive')
+            ->with('success', 'Database has been completely deleted');
+    }
+
+    public function restore($id)
+    {
+        $database = Database::onlyTrashed()->findOrFail($id)->restore();
+
+        return redirect()->route('databases.archive')
+            ->with('success', 'Database has been successfully restored');
+    }
+
     //======================================================================
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
 
     public function filter(Request $request)
     {
+        $itemType = 'index';
         $databases = Database::filter('name', $request->all());
 
-        if ($databases->isEmpty()) {
+        if ($databases->isEmpty())
             return redirect()->route('databases.index')
                 ->with('error', 'No matching databases found');
-        }
 
-        return view('pages/databases/index', compact('databases'));
+        return view('pages/databases/index', compact('databases', 'itemType'));
     }
 }

@@ -5,7 +5,7 @@
 
 <!-- Databases container -->
 <div id="div-databases">
-	@if (isset($literature->databases) && $literature->databases->count() != 0)
+	@if (isset($literature) && $literature->databases->isNotEmpty())
 		@foreach ($literature->databases as $activeDatabase)
 			@include('pages/literature/create-update parts/_form-database', [
   		  'activeDatabase' => $activeDatabase,

@@ -12,9 +12,18 @@ class LiteratureController extends Controller
 {
     public function index()
     {
+        $itemType = 'index';
         $literature = Literature::orderBy('title')->paginate(10);
 
-        return view('pages/literature/index', compact('literature'));
+        return view('pages/literature/index', compact('literature', 'itemType'));
+    }
+
+    public function archive()
+    {
+        $itemType = 'archival';
+        $literature = Literature::onlyTrashed()->orderBy('title')->paginate(10);
+
+        return view('pages/literature/index', compact('literature', 'itemType'));
     }
 
     public function create()
@@ -83,6 +92,30 @@ class LiteratureController extends Controller
             ->with('success', 'Literature was successfully deleted');
     }
 
+    public function forceDestroy($id)
+    {
+        $literature = Literature::onlyTrashed()->findOrFail($id);
+
+        if ($literature->publications->isNotEmpty())
+            return redirect()->route('literature.archive')
+                ->with('error', 'Cannot delete literature with related publications');
+
+        $literature->databases()->detach();
+
+        $literature->forceDelete();
+
+        return redirect()->route('literature.archive')
+            ->with('success', 'Literature has been completely deleted');
+    }
+
+    public function restore($id)
+    {
+        $literature = Literature::onlyTrashed()->findOrFail($id)->restore();
+
+        return redirect()->route('literature.archive')
+        ->with('success', 'Literature has been successfully restored');
+    }
+
     //======================================================================
     // RESOURCE ADDITIONAL METHODS
     //======================================================================
@@ -111,14 +144,14 @@ class LiteratureController extends Controller
 
     public function filter(Request $request)
     {
+        $itemType = 'index';
         $literature = Literature::filter('title', $request->all());
 
-        if ($literature->isEmpty()) {
+        if ($literature->isEmpty())
             return redirect()->route('literature.index')
                 ->with('error', 'No matching literature found');
-        }
 
-        return view('pages/literature/index', compact('literature'));
+        return view('pages/literature/index', compact('literature', 'itemType'));
     }
 
     private function updateFile($newFile, $oldFilePath)

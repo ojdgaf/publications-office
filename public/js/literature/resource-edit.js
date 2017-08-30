@@ -44,9 +44,11 @@ $(() => {
 	}
 
     function deleteDatabaseForm() {
-        if (counter > 1) {
+        if (counter > 0) {
             databasesDiv.children().last().remove();
             counter--;
         }
+
+        if (counter == 0) loadDatabaseForm();
     }
 });

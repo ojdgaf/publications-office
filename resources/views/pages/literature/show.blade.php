@@ -25,7 +25,7 @@
 				'id' => $literature->id,
 			])
 
-			@if (!is_null($literature->cover_path))
+			@if (! is_null($literature->cover_path))
 				<div class="row indent">
 					<div class="col-md-6">
 						<h2 class="text-center">{{ $literature->title }}</h2>
@@ -76,13 +76,11 @@
 				@endif
 			@endif
 
-      @php $databases = $literature->databases()->withTrashed()->get(); @endphp
-
-			@if ($databases->isNotEmpty())
+			@if ($literature->databases->isNotEmpty())
 				<hr>
-				<label>Relevant bibliographic databases ({{ $databases->count() }})</label>
+				<label>Relevant bibliographic databases ({{ $literature->databases->count() }})</label>
 				<ul>
-				@foreach ($databases as $database)
+				@foreach ($literature->databases as $database)
 					<li>
             @if (! $database->trashed())
   						<a href="{{ route('databases.show', $database->id) }}">
@@ -103,7 +101,7 @@
 
 			@if ($literature->publications->isNotEmpty())
 				<hr>
-				<label>Available publications</label>
+				<label>Available publications ({{ $literature->publications->count() }})</label>
 				<ul>
 				@foreach ($literature->publications as $publication)
 					<li>
