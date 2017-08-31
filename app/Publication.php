@@ -2,8 +2,7 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\StorageController;
 
 class Publication extends Model
 {
@@ -67,7 +66,7 @@ class Publication extends Model
 
         foreach ($relatedDeletedAuthors as $author) $author->remove();
 
-        Storage::delete($this->document_path);
+        StorageController::delete($this->document_path);
 
         $this->delete();
 

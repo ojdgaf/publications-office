@@ -2,9 +2,8 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\StorageController;
 
 class Literature extends Model
 {
@@ -75,7 +74,7 @@ class Literature extends Model
 
             foreach ($relatedDeletedDatabases as $database) $database->remove();
 
-            Storage::delete($this->cover_path);
+            StorageController::delete($this->cover_path);
 
             $this->forceDelete();
         } else {

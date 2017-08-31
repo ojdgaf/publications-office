@@ -14,7 +14,6 @@ use Illuminate\Contracts\Queue\QueueableEntity;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\ConnectionResolverInterface as Resolver;
-use Nicolaslopezj\Searchable\SearchableTrait; // search engine
 
 abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializable, QueueableEntity, UrlRoutable
 {
@@ -24,9 +23,7 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
         Concerns\HasRelationships,
         Concerns\HasTimestamps,
         Concerns\HidesAttributes,
-        Concerns\GuardsAttributes,
-        SearchableTrait; // search engine
-
+        Concerns\GuardsAttributes;
     /**
      * The connection name for the model.
      *
@@ -1389,52 +1386,5 @@ abstract class Model implements ArrayAccess, Arrayable, Jsonable, JsonSerializab
     public function __wakeup()
     {
         $this->bootIfNotBooted();
-    }
-
-    /**
-     * Filtering by database enum columns
-     *
-     * @param  string       $orderByColumn
-     * @param  array        $filterParameters
-     * @param  integer      $itemsPerPage
-     * @return Collection
-     */
-    public static function filter(
-        $orderByColumn,
-        $filterParameters = null,
-        $itemsPerPage = 10
-    ) {
-        return self::where($filterParameters)
-            ->orderBy($orderByColumn)
-            ->paginate($itemsPerPage);
-    }
-
-    /**
-     * Keywords search and filtering
-     *
-     * @param  array        $filterParameters
-     * @param  string       $keywords
-     * @param  string       $orderByColumn
-     * @param  array        $timeInterval
-     * @return Collection
-     */
-    public static function filterAndSearch(
-        $filterParameters,
-        $keywords,
-        $orderByColumn,
-        $timeInterval = null
-    ) {
-        if (is_null($timeInterval)) {
-            return self::where($filterParameters)
-                ->search($keywords)
-                ->orderBy($orderByColumn)
-                ->get();
-        }
-
-        return self::where($filterParameters)
-            ->whereBetween('issue_year', $timeInterval)
-            ->search($keywords)
-            ->orderBy($orderByColumn)
-            ->get();
     }
 }

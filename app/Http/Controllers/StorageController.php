@@ -68,4 +68,15 @@ class StorageController extends Controller
 
         return $oldFilePath;
     }
+
+    /**
+     * Delete a file
+     *
+     * @param string $filepath
+     * @return void
+     */
+    public static function delete($filepath)
+    {
+        Storage::delete($filepath);
+    }
 }
