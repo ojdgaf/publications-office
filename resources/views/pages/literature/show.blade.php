@@ -19,11 +19,13 @@
 			<h1>LITERATURE REVIEW</h1>
 			<hr>
 
-			@include(
-				'layouts/partials/_button-to-edit',
-				['model' => 'literature',
-				'id' => $literature->id,
-			])
+      @if (Auth::user()->isStaff())
+  			@include(
+  				'layouts/partials/_button-to-edit',
+  				['model' => 'literature',
+  				'id' => $literature->id,
+  			])
+      @endif
 
 			@if (! is_null($literature->cover_path))
 				<div class="row indent">

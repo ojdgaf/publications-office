@@ -19,11 +19,13 @@
 			<h1>AUTHOR REVIEW</h1>
 			<hr>
 
-			@include(
-				'layouts/partials/_button-to-edit',
-				['model' => 'authors',
-				'id' => $author->id,
-			])
+      @if (Auth::user()->isStaff())
+  			@include(
+  				'layouts/partials/_button-to-edit',
+  				['model' => 'authors',
+  				'id' => $author->id,
+  			])
+      @endif
 
 			<h2 class="text-center">{{ ucwords($author->name) }}</h2>
 

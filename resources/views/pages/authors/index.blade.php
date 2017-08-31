@@ -15,10 +15,12 @@
 	<h1>Authors</h1>
 
   <p>
-    @if ($itemType === 'index')
-      <a href="{{ route('authors.archive') }}">Show archival</a>
-    @else
-      <a href="{{ route('authors.index') }}">Show active</a>
+    @if (Auth::user()->isAdmin())
+      @if ($itemType === 'index')
+        <a href="{{ route('authors.archive') }}">Show archival</a>
+      @else
+        <a href="{{ route('authors.index') }}">Show active</a>
+      @endif
     @endif
   </p>
 

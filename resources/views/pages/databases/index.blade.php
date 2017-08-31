@@ -15,10 +15,12 @@
 	<h1>Bibliographic databases</h1>
 
   <p>
-    @if ($itemType === 'index')
-      <a href="{{ route('databases.archive') }}">Show archival</a>
-    @else
-      <a href="{{ route('databases.index') }}">Show active</a>
+    @if (Auth::user()->isAdmin())
+      @if ($itemType === 'index')
+        <a href="{{ route('databases.archive') }}">Show archival</a>
+      @else
+        <a href="{{ route('databases.index') }}">Show active</a>
+      @endif
     @endif
   </p>
 

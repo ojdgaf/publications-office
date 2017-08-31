@@ -16,4 +16,19 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function isTeacher()
+    {
+        return $this->group == 'teachers';
+    }
+
+    public function isAdmin()
+    {
+        return $this->group == 'admins';
+    }
+
+    public function isStaff()
+    {
+        return $this->isTeacher() || $this->isAdmin();
+    }
 }

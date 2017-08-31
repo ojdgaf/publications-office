@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\StoreAuthor;
 
 class AuthorController extends Controller
-{
+{    
     public function index()
     {
         $itemType = 'index';

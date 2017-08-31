@@ -6,7 +6,6 @@ use App\Literature;
 use App\Database;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreLiterature;
-use Illuminate\Support\Facades\Storage;
 
 class LiteratureController extends Controller
 {
@@ -71,14 +70,18 @@ class LiteratureController extends Controller
         $literature = Literature::findOrFail($id);
 
         $input = $request->all();
-        $input['cover_path'] = $this->updateFile(
-                                      $request->file('cover'),
-                                      $literature->cover_path);
+
+        $input['cover_path'] =
+            StorageController::updateLiteratureCover(
+                $request->file('cover'),
+              $literature->cover_path
+         );
 
         $literature->fill($input)->save();
 
         $literature->databases()->sync(
-            $this->alterDatabasesArray($input['databases']));
+            $this->alterDatabasesArray($input['databases'])
+        );
 
         return redirect()->route('literature.show', $literature->id)
             ->with('success', 'Literature was successfully updated');
@@ -113,7 +116,7 @@ class LiteratureController extends Controller
         $literature = Literature::onlyTrashed()->findOrFail($id)->restore();
 
         return redirect()->route('literature.archive')
-        ->with('success', 'Literature has been successfully restored');
+            ->with('success', 'Literature has been successfully restored');
     }
 
     //======================================================================
@@ -123,7 +126,7 @@ class LiteratureController extends Controller
     /**
      * Return suitable array for attach() method
      *
-     * @var array
+     * @param array
      * @return array
      */
     private function alterDatabasesArray($databases)
@@ -152,15 +155,5 @@ class LiteratureController extends Controller
                 ->with('error', 'No matching literature found');
 
         return view('pages/literature/index', compact('literature', 'itemType'));
-    }
-
-    private function updateFile($newFile, $oldFilePath)
-    {
-        if ($newFile) {
-            if ($oldFilePath) Storage::delete($oldFilePath);
-            return $newFile->store('literature/covers');
-        }
-
-        return $oldFilePath;
     }
 }

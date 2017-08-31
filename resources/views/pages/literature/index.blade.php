@@ -15,10 +15,12 @@
 	<h1>Literature</h1>
 
   <p>
-    @if ($itemType === 'index')
-      <a href="{{ route('literature.archive') }}">Show archival</a>
-    @else
-      <a href="{{ route('literature.index') }}">Show active</a>
+    @if (Auth::user()->isAdmin())
+      @if ($itemType === 'index')
+        <a href="{{ route('literature.archive') }}">Show archival</a>
+      @else
+        <a href="{{ route('literature.index') }}">Show active</a>
+      @endif
     @endif
   </p>
 

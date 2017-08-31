@@ -19,11 +19,13 @@
 			<h1>DATABASE REVIEW</h1>
 			<hr>
 
-			@include(
-				'layouts/partials/_button-to-edit',
-				['model' => 'databases',
-				'id' => $database->id,
-			])
+      @if (Auth::user()->isStaff())
+  			@include(
+  				'layouts/partials/_button-to-edit',
+  				['model' => 'databases',
+  				'id' => $database->id,
+  			])
+      @endif
 
 			<h2 class="text-center">{{ ucwords($database->name) }}</h2>
 

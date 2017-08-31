@@ -7,8 +7,6 @@ use App\Author;
 use App\Literature;
 use Illuminate\Http\Request;
 use App\Http\Requests\StorePublication;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Facades\Storage;
 
 // CHECK IF PAGES FOR NEW/UPDATED PUBLICATION ARE NOT ALREADY BOOKED
 
@@ -17,16 +15,6 @@ class PublicationController extends Controller
     public function index()
     {
         $publications = Publication::orderBy('heading')->paginate(10);
-
-        return view('pages/publications/index', compact('publications'));
-    }
-
-    public function archival()
-    {
-        dd('ass');
-        $publications = Publication::onlyTrashed()
-            ->orderBy('heading')
-            ->paginate(10);
 
         return view('pages/publications/index', compact('publications'));
     }
@@ -45,9 +33,11 @@ class PublicationController extends Controller
     {
         $input = $request->all();
 
-        $input['document_path'] = $this->storeFile(
-                                    $request->heading,
-                                    $request->file('document'));
+        $input['document_path'] =
+            StorageController::storePublicationFile(
+                $request->heading,
+                $request->file('document')
+        );
 
         $publication = Publication::create($input);
 
@@ -81,10 +71,13 @@ class PublicationController extends Controller
         $publication = Publication::findOrFail($id);
 
         $input = $request->all();
-        $input['document_path'] = $this->updateFile(
-                                    $request->heading,
-                                    $request->file('document'),
-                                    $publication->document_path);
+
+        $input['document_path'] =
+            StorageController::updatePublicationFile(
+                $request->heading,
+                $request->file('document'),
+                $publication->document_path
+        );
 
         $publication->fill($input)->save();
 
@@ -111,7 +104,7 @@ class PublicationController extends Controller
     /**
      * Return suitable array for attach() method
      *
-     * @var array
+     * @param array
      * @return array
      */
     private function alterAuthorsArray($authors)
@@ -136,30 +129,5 @@ class PublicationController extends Controller
                 ->with('error', 'No matching publications found');
 
         return view('pages/publications/index', compact('publications'));
-    }
-
-    private function storeFile($heading, $newFile)
-    {
-        $newName = preg_replace('([^\w\s\d\-_~,;\[\]\(\)])', '', $heading);
-        $newExtension = $newFile->extension();
-        return $newFile->storeAs('publications', $newName . '.' . $newExtension);
-    }
-
-    private function updateFile($heading, $newFile, $oldFilePath)
-    {
-        $newName = preg_replace('([^\w\s\d\-_~,;\[\]\(\)])', '', $heading);
-
-        if ($newFile) {
-            // replace file
-            $newExtension = $newFile->extension();
-            Storage::delete($oldFilePath);
-            return $newFile->storeAs('publications', $newName . '.' . $newExtension);
-        } else {
-            // update filename if necessary
-            $oldExtension = (new Filesystem)->extension($oldFilePath);
-            $newFilePath = 'publications/' . $newName . '.' . $oldExtension;
-            if ($newFilePath != $oldFilePath) Storage::move($oldFilePath, $newFilePath);
-            return $newFilePath;
-        }
     }
 }

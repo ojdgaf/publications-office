@@ -10,4 +10,15 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['index', 'show', 'filter']);
+
+        $this->middleware('staff')->only(
+            ['create', 'store', 'edit', 'update', 'destroy']
+        );
+
+        $this->middleware('admin')->only(['archive', 'forceDestroy', 'restore']);
+    }
 }

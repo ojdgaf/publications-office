@@ -18,11 +18,13 @@
 			<h1>PUBLICATION REVIEW</h1>
 			<hr>
 
-			@include(
-				'layouts/partials/_button-to-edit',
-				['model' => 'publications',
-				'id' => $publication->id,
-			])
+      @if (Auth::user()->isStaff())
+  			@include(
+  				'layouts/partials/_button-to-edit',
+  				['model' => 'publications',
+  				'id' => $publication->id,
+  			])
+      @endif
 
 			<h2 class="fancy-align">{{ $publication->heading }}</h2>
 
@@ -95,9 +97,15 @@
 
 			<div class="row indent">
 				<div class="col-md-4 col-md-offset-4">
-					<a download href="{{ asset('storage/' . $publication->document_path) }}" class="btn btn-primary btn-lg btn-block">
-						Download publication
-					</a>
+          @if (Auth::check())
+  					<a download href="{{ asset('storage/' . $publication->document_path) }}" class="btn btn-primary btn-lg btn-block">
+  						Download publication
+  					</a>
+          @else
+            <p class="fancy-align">
+              <b>Login or register to download full publication</b>
+            </p>
+          @endif
 				</div>
 			</div>
 		</div>
