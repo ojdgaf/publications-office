@@ -18,7 +18,9 @@ class ResetPasswordController extends Controller
     |
     */
 
-    use ResetsPasswords;
+    use ResetsPasswords, AuthOverriddenMethods {
+        AuthOverriddenMethods::showResetForm insteadof ResetsPasswords;
+    }
 
     /**
      * Where to redirect users after resetting their password.

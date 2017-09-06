@@ -15,7 +15,7 @@
 	<h1>Bibliographic databases</h1>
 
   <p>
-    @if (Auth::user()->isAdmin())
+    @if (Auth::check() && Auth::user()->isAdmin())
       @if ($itemType === 'index')
         <a href="{{ route('databases.archive') }}">Show archival</a>
       @else

@@ -18,7 +18,9 @@ class ForgotPasswordController extends Controller
     |
     */
 
-    use SendsPasswordResetEmails;
+    use SendsPasswordResetEmails, AuthOverriddenMethods {
+        AuthOverriddenMethods::showLinkRequestForm insteadof SendsPasswordResetEmails;
+    }
 
     /**
      * Create a new controller instance.

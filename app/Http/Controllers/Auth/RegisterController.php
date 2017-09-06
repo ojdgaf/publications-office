@@ -20,7 +20,9 @@ class RegisterController extends Controller
     |
     */
 
-    use RegistersUsers;
+    use RegistersUsers, AuthOverriddenMethods {
+        AuthOverriddenMethods::showRegistrationForm insteadof RegistersUsers;
+    }
 
     /**
      * Where to redirect users after registration.

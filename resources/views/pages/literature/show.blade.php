@@ -19,7 +19,7 @@
 			<h1>LITERATURE REVIEW</h1>
 			<hr>
 
-      @if (Auth::user()->isStaff())
+      @if (Auth::check() && Auth::user()->isStaff())
   			@include(
   				'layouts/partials/_button-to-edit',
   				['model' => 'literature',

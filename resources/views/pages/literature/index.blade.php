@@ -15,7 +15,7 @@
 	<h1>Literature</h1>
 
   <p>
-    @if (Auth::user()->isAdmin())
+    @if (Auth::check() && Auth::user()->isAdmin())
       @if ($itemType === 'index')
         <a href="{{ route('literature.archive') }}">Show archival</a>
       @else
