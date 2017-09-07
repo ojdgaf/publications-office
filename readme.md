@@ -44,6 +44,6 @@ See [notes.txt](notes.txt)
 
 ![index page](storage/screenshots/index.jpg)
 
-![publications page](storage/screenshots/publications list.jpg)
+![publications page](storage/screenshots/publications-list.jpg)
 
-![publication review](storage/screenshots/publication review.jpg)
+![publication review](storage/screenshots/publication-review.jpg)
