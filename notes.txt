@@ -6,4 +6,8 @@ you can select the 'department staff' status for publication author even if he/s
 
 for database validation class 'http://example.com' and 'http://example.com/' are not equal
 
-stupid main page layout, has to be changed
+no capability to add publications for common users
+
+no admin menu
+
+no personal page

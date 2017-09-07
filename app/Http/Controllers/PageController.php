@@ -13,14 +13,8 @@ class PageController extends Controller
 		return view('pages/index')->withPublications($publications);
 	}
 
-	public function getQueries()
+	public function about()
 	{
-		return view('pages/queries');
+		return view('pages/about');
 	}
-
-	public function getProfile()
-	{
-		return view('pages/profile');
-	}
-	
 }
